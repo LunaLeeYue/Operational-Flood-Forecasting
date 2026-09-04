@@ -86,7 +86,9 @@ function updateDateButtons() {
 function updateMetadata() {
     elements.observationDate.textContent = state.region.latest_observation_date;
     elements.generatedAt.textContent = new Date(state.region.generated_at).toLocaleString();
-    elements.modelLabel.textContent = state.region.model.label;
+    elements.modelLabel.textContent =
+        `${state.region.model.history_days}-day history → ` +
+        `${state.region.model.forecast_days}-day forecast`;
 }
 
 async function loadForecastLayers() {

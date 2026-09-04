@@ -71,7 +71,7 @@ class SingleLayerConvLSTM(nn.Module):
 
 
 class StackedConvLSTM(nn.Module):
-    """Exact state-dict layout used by the Louisiana/WCL hypersearch notebook."""
+    """Exact state-dict layout used by the Louisiana/WLC hypersearch notebook."""
 
     def __init__(
         self,

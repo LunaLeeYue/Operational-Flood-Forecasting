@@ -30,7 +30,9 @@ def save_forecast_png(values: np.ndarray, output_path: Path) -> None:
     axes.axis("off")
     color_map = matplotlib.colormaps["jet"].copy()
     color_map.set_bad((0, 0, 0, 0))
-    visible = np.ma.masked_where(~np.isfinite(values) | (values <= 0.05), values)
+    # Keep low/near-zero water fractions visible as the dark-blue end of the
+    # water map. Only pixels outside the AOI (NaN) remain transparent.
+    visible = np.ma.masked_invalid(values)
     axes.imshow(
         visible,
         cmap=color_map,
@@ -149,8 +151,6 @@ def publish_region(
         "center": region["center"],
         "zoom": region["zoom"],
         "model": {
-            "label": region["model_label"],
-            "architecture": region["architecture"],
             "history_days": region["input_len"],
             "forecast_days": region["pred_len"],
         },

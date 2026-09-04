@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from flood_app.data import preprocess
-from flood_app.publish import publish_region
+from flood_app.publish import publish_region, save_forecast_png
 
 
 class DataAndPublishTests(unittest.TestCase):
@@ -54,7 +54,6 @@ class DataAndPublishTests(unittest.TestCase):
             "pred_len": 3,
             "center": [1.5, 3.5],
             "zoom": 8,
-            "model_label": "test model",
             "architecture": "single_layer",
             "input_len": 2,
         }
@@ -64,11 +63,20 @@ class DataAndPublishTests(unittest.TestCase):
             output = Path(directory)
             metadata = publish_region("test", region, raw, predictions, mask, output)
             self.assertEqual(metadata["prediction_dates"], ["2026-01-03", "2026-01-04", "2026-01-05"])
+            self.assertEqual(metadata["model"], {"history_days": 2, "forecast_days": 3})
             self.assertTrue((output / "test/latest.json").is_file())
             self.assertTrue((output / "test/maps/day-1.png").is_file())
             self.assertTrue((output / "test/points/day-1.geojson").is_file())
             with (output / "test/points/day-1.geojson").open(encoding="utf-8") as handle:
                 self.assertEqual(json.load(handle)["type"], "FeatureCollection")
+
+    def test_near_zero_water_is_visible_blue(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "near-zero.png"
+            save_forecast_png(np.zeros((4, 5), dtype=np.float32), output)
+            image = __import__("matplotlib.image").image.imread(output)
+            self.assertTrue((image[..., 3] > 0.99).all())
+            self.assertGreater(float(image[..., 2].mean()), float(image[..., 0].mean()))
 
 
 if __name__ == "__main__":

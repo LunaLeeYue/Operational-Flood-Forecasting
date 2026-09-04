@@ -13,7 +13,7 @@ runtime/
 # Generated Pages data; GitHub Actions creates these for its deployment artifact.
 site/data/catalog.json
 site/data/umap/
-site/data/wcl/
+site/data/wlc/
 
 # Local diagnostic outputs
 validation_site/

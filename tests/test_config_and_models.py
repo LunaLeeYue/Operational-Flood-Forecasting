@@ -22,15 +22,15 @@ class ConfigAndModelTests(unittest.TestCase):
 
     def test_expected_regions_and_notebook_parameters(self):
         umap = self.config["regions"]["umap"]
-        wcl = self.config["regions"]["wcl"]
+        wlc = self.config["regions"]["wlc"]
         self.assertEqual((umap["input_len"], umap["pred_len"]), (7, 3))
         self.assertEqual((umap["hidden_dim"], umap["num_layers"]), (32, 1))
-        self.assertEqual((wcl["input_len"], wcl["pred_len"]), (9, 3))
-        self.assertEqual((wcl["hidden_dim"], wcl["num_layers"]), (16, 3))
+        self.assertEqual((wlc["input_len"], wlc["pred_len"]), (9, 3))
+        self.assertEqual((wlc["hidden_dim"], wlc["num_layers"]), (16, 3))
 
     def test_both_trained_state_dicts_load_strictly_and_infer(self):
         device = torch.device("cpu")
-        for region_id in ("umap", "wcl"):
+        for region_id in ("umap", "wlc"):
             with self.subTest(region=region_id):
                 region = self.config["regions"][region_id]
                 model = load_model(region, device)
