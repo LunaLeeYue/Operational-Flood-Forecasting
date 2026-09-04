@@ -1,0 +1,86 @@
+name: Build and publish daily flood forecast
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/daily-prediction.yml"
+      - "assets/**"
+      - "config/**"
+      - "flood_app/**"
+      - "models/**"
+      - "scripts/**"
+      - "site/**"
+      - "tests/**"
+      - "requirements.txt"
+  schedule:
+    # NOAA's previous-day composite is normally available by this time.
+    # GitHub cron uses UTC; 06:17 avoids the high-load top of the hour.
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+    inputs:
+      reference_date:
+        description: "Optional NOAA archive date to test (YYYY-MM-DD)"
+        required: false
+        type: string
+
+concurrency:
+  group: flood-forecast-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install CPU PyTorch
+        run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install forecast dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Generate latest forecasts
+        env:
+          REFERENCE_DATE: ${{ inputs.reference_date }}
+        run: |
+          args=(--device cpu --output site/data --cache runtime/noaa-cache)
+          if [[ -n "$REFERENCE_DATE" ]]; then
+            args+=(--reference-date "$REFERENCE_DATE")
+          fi
+          python scripts/run_daily.py "${args[@]}"
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

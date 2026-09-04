@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Near-real-time ConvLSTM flood forecasts from NOAA VIIRS data">
+    <title>Near-real-time Flood Prediction | ConvLSTM</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header id="header">
+        <div>
+            <h1>🌊 Near-real-time Flood Prediction</h1>
+            <p>ConvLSTM three-day forecasts using NOAA JPSS VIIRS daily flood maps</p>
+        </div>
+        <span class="research-badge">Research product</span>
+    </header>
+
+    <main id="container">
+        <aside id="sidebar">
+            <section class="control-section">
+                <h2>📍 Select Region (AOI)</h2>
+                <select id="aoi-select" class="aoi-select" aria-label="Select forecast region">
+                    <option>Loading regions…</option>
+                </select>
+            </section>
+
+            <section class="control-section">
+                <h2>📅 Prediction Date</h2>
+                <div id="date-selector" class="button-row">
+                    <button class="date-btn active" data-index="0">Day +1</button>
+                    <button class="date-btn" data-index="1">Day +2</button>
+                    <button class="date-btn" data-index="2">Day +3</button>
+                </div>
+            </section>
+
+            <section class="control-section">
+                <h2>🗺️ Display Mode</h2>
+                <div class="button-row">
+                    <button class="mode-btn active" data-mode="raster">Map</button>
+                    <button class="mode-btn" data-mode="points">Mark</button>
+                    <button class="mode-btn" data-mode="both">Both</button>
+                </div>
+            </section>
+
+            <section class="control-section">
+                <button id="update-btn" class="update-btn">🔄 Check Latest Forecast</button>
+                <p class="button-help">Forecasts are generated automatically by GitHub Actions.</p>
+            </section>
+
+            <div id="status-box" class="status info" role="status">
+                <strong>Status:</strong> <span id="status-text">Loading forecast catalog…</span>
+            </div>
+
+            <section class="control-section metadata-card">
+                <h2>Forecast Information</h2>
+                <dl>
+                    <div><dt>Latest observation</dt><dd id="observation-date">—</dd></div>
+                    <div><dt>Generated</dt><dd id="generated-at">—</dd></div>
+                    <div><dt>Model</dt><dd id="model-label">—</dd></div>
+                </dl>
+            </section>
+
+            <section class="control-section legend">
+                <h2>🎨 Flood Water Fraction</h2>
+                <div class="legend-item"><i style="background:#0000ff"></i><span>5–30%</span></div>
+                <div class="legend-item"><i style="background:#00ffff"></i><span>30–50%</span></div>
+                <div class="legend-item"><i style="background:#ffff00"></i><span>50–70%</span></div>
+                <div class="legend-item"><i style="background:#ff7f00"></i><span>70–90%</span></div>
+                <div class="legend-item"><i style="background:#ff0000"></i><span>90–100%</span></div>
+            </section>
+
+            <section class="info-box">
+                <strong>ℹ️ About</strong>
+                <p>UMAP uses seven observed days and WCL uses nine observed days. Both models predict the following three days.</p>
+                <p>This is a near-real-time research forecast and must not be used as the sole basis for emergency decisions.</p>
+            </section>
+        </aside>
+
+        <div id="map" aria-label="Flood forecast map"></div>
+        <div id="loading" class="loading show" aria-live="polite">
+            <div class="spinner"></div>
+            <p><strong>Loading…</strong></p>
+            <p id="loading-text">Reading the latest forecast…</p>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

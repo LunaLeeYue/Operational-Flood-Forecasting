@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+.DS_Store
+.venv/
+venv/
+
+# Downloaded NOAA tiles and transient files
+runtime/
+*.part
+
+# Generated Pages data; GitHub Actions creates these for its deployment artifact.
+site/data/catalog.json
+site/data/umap/
+site/data/wcl/
+
+# Local diagnostic outputs
+validation_site/
+*.log

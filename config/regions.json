@@ -1,0 +1,49 @@
+{
+  "source": {
+    "bucket": "noaa-jpss",
+    "base_path": "JPSS_Blended_Products/VFM_1day_GLB/NetCDF",
+    "lookback_days": 30
+  },
+  "regions": {
+    "umap": {
+      "name": "Mississippi River Basin (UMAP)",
+      "center": [36.36, -89.55],
+      "zoom": 8,
+      "tiles": ["019", "020"],
+      "aoi_path": "assets/aoi/umap/AOI.shp",
+      "mask_path": "assets/masks/umap.nc",
+      "model_path": "models/umap.pth",
+      "architecture": "single_layer",
+      "input_len": 7,
+      "pred_len": 3,
+      "input_dim": 2,
+      "hidden_dim": 32,
+      "output_dim": 1,
+      "kernel_size": 3,
+      "num_layers": 1,
+      "dropout_rate": 0.25,
+      "model_label": "NoInterp best, 7-day history / 3-day forecast",
+      "source_notebook": "Test_convlstm_auto/4_Test_convlstm_auto_Mississippi.ipynb"
+    },
+    "wcl": {
+      "name": "Louisiana (WCL)",
+      "center": [30.20, -92.85],
+      "zoom": 8,
+      "tiles": ["019", "023"],
+      "aoi_path": "assets/aoi/wcl/Louisiana_AOI.shp",
+      "mask_path": "assets/masks/wcl.nc",
+      "model_path": "models/wcl.pth",
+      "architecture": "stacked",
+      "input_len": 9,
+      "pred_len": 3,
+      "input_dim": 2,
+      "hidden_dim": 16,
+      "output_dim": 1,
+      "kernel_size": 3,
+      "num_layers": 3,
+      "dropout_rate": 0.25,
+      "model_label": "HyperSearch epoch 2, hd16/k3/l3, 9-day history / 3-day forecast",
+      "source_notebook": "Test_convlstm_auto/4_Test_convlstm_hypersearch_Louisiana.ipynb"
+    }
+  }
+}
