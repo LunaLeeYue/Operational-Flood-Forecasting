@@ -109,7 +109,7 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
 .metadata-card dt { color: var(--muted); }
 .metadata-card dd { margin: 0; overflow-wrap: anywhere; }
 
-.uh-logo { align-self: flex-start; width: 72px; height: 72px; flex: 0 0 auto; object-fit: contain; border-radius: 50%; background: white; }
+.uh-logo { align-self: flex-start; width: 132px; height: 90px; padding: 6px; flex: 0 0 auto; object-fit: contain; border-radius: 4px; background: white; }
 .header-title { flex: 1; min-width: 0; }
 #header .developer-credit { margin-top: 7px; font-size: 13px; opacity: 1; }
 .forecast-legend { padding: 12px 14px 18px; border-radius: 6px; background: rgba(255, 255, 255, 0.96); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); color: #263238; }
@@ -119,16 +119,6 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
 .legend-ticks { position: relative; width: 38px; }
 .legend-ticks span { position: absolute; left: 0; padding-left: 10px; transform: translateY(-50%); font-size: 12px; line-height: 1; }
 .legend-ticks span::before { content: ""; position: absolute; left: 0; top: 50%; width: 5px; border-top: 1px solid #222; }
-
-.info-box {
-    padding: 12px;
-    border-left: 4px solid var(--accent);
-    border-radius: 5px;
-    background: #f8f9fa;
-    font-size: 12px;
-    line-height: 1.5;
-}
-.info-box p { margin: 7px 0 0; }
 
 .loading {
     display: none;
@@ -161,7 +151,7 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
 
 @media (max-width: 760px) {
     #header { gap: 12px; padding: 12px 15px; }
-    .uh-logo { width: 56px; height: 56px; }
+    .uh-logo { width: 96px; height: 66px; padding: 4px; }
     .legend-scale { height: 160px; }
     .forecast-legend { padding: 10px 10px 16px; }
     #header h1 { font-size: 20px; }
@@ -170,6 +160,6 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
     #sidebar { width: 100%; flex: 0 0 285px; padding: 14px; }
     #map { min-height: 330px; }
     .control-section { margin-bottom: 15px; }
-    .metadata-card, .info-box { display: none; }
+    .metadata-card { display: none; }
     .loading { left: 50%; top: calc(285px + (100% - 285px) / 2); }
 }
