@@ -31,15 +31,6 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
 #header h1 { margin: 0 0 4px; font-size: 27px; }
 #header p { margin: 0; font-size: 14px; opacity: 0.92; }
 
-.research-badge {
-    flex: 0 0 auto;
-    padding: 7px 11px;
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    border-radius: 999px;
-    font-size: 12px;
-    background: rgba(255, 255, 255, 0.13);
-}
-
 #container { display: flex; flex: 1; min-height: 0; position: relative; }
 
 #sidebar {
@@ -118,7 +109,7 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
 .metadata-card dt { color: var(--muted); }
 .metadata-card dd { margin: 0; overflow-wrap: anywhere; }
 
-.uh-logo { width: 72px; height: 72px; flex: 0 0 auto; object-fit: contain; border-radius: 50%; background: white; }
+.uh-logo { align-self: flex-start; width: 72px; height: 72px; flex: 0 0 auto; object-fit: contain; border-radius: 50%; background: white; }
 .header-title { flex: 1; min-width: 0; }
 #header .developer-credit { margin-top: 7px; font-size: 13px; opacity: 1; }
 .forecast-legend { padding: 12px 14px 18px; border-radius: 6px; background: rgba(255, 255, 255, 0.96); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); color: #263238; }
@@ -175,7 +166,6 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
     .forecast-legend { padding: 10px 10px 16px; }
     #header h1 { font-size: 20px; }
     #header p { font-size: 12px; }
-    .research-badge { display: none; }
     #container { flex-direction: column; }
     #sidebar { width: 100%; flex: 0 0 285px; padding: 14px; }
     #map { min-height: 330px; }
