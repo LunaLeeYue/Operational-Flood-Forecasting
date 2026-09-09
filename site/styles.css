@@ -1,10 +1,10 @@
 :root {
     color-scheme: light;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    --accent: #667eea;
-    --accent-dark: #764ba2;
+    --accent: #c8102e;
+    --accent-dark: #a30d26;
     --text: #263238;
-    --muted: #607d8b;
+    --muted: #626970;
     --panel: #ffffff;
     --line: #dfe4ea;
 }
@@ -23,13 +23,15 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
     justify-content: space-between;
     gap: 20px;
     padding: 15px 22px;
-    color: white;
-    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    color: var(--text);
+    background: #ffffff;
+    border-top: 4px solid var(--accent);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 2px 8px rgba(25, 32, 40, 0.05);
 }
 
-#header h1 { margin: 0 0 4px; font-size: 27px; }
-#header p { margin: 0; font-size: 14px; opacity: 0.92; }
+#header h1 { margin: 0 0 6px; font-size: 27px; font-weight: 650; letter-spacing: -0.5px; color: #252a30; }
+#header p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
 
 #container { display: flex; flex: 1; min-height: 0; position: relative; }
 
@@ -50,7 +52,7 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
 .control-section h2 {
     margin: 0 0 11px;
     padding-bottom: 6px;
-    border-bottom: 2px solid var(--accent);
+    border-bottom: 1px solid var(--line);
     color: #333;
     font-size: 16px;
 }
@@ -89,11 +91,14 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
     border: 0;
     border-radius: 6px;
     color: white;
-    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    background: var(--accent);
     cursor: pointer;
     font-size: 15px;
     font-weight: 700;
 }
+
+.update-btn:hover { background: var(--accent-dark); }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .update-btn:disabled { cursor: wait; opacity: 0.58; }
 .button-help { margin: 7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
@@ -111,7 +116,8 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
 
 .uh-logo { align-self: flex-start; width: 132px; height: 90px; padding: 6px; flex: 0 0 auto; object-fit: contain; background: transparent; }
 .header-title { flex: 1; min-width: 0; }
-#header .developer-credit { margin-top: 7px; font-size: 13px; opacity: 1; }
+#header .developer-credit { margin-top: 7px; font-size: 13px; }
+#header .developer-credit strong { color: var(--accent); font-weight: 600; }
 .forecast-legend { padding: 12px 14px 18px; border-radius: 6px; background: rgba(255, 255, 255, 0.96); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); color: #263238; }
 .legend-title { margin-bottom: 14px; font-size: 12px; font-weight: 600; }
 .legend-scale { display: flex; justify-content: center; height: 220px; }
