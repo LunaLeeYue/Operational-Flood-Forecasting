@@ -6,7 +6,7 @@
   },
   "regions": {
     "umap": {
-      "name": "Mississippi River Basin (UMAP)",
+      "name": "Upper Mississippi Alluvial Plain (UMAP)",
       "center": [36.36, -89.55],
       "zoom": 8,
       "tiles": ["019", "020"],
@@ -25,7 +25,7 @@
       "source_notebook": "Test_convlstm_auto/4_Test_convlstm_auto_Mississippi.ipynb"
     },
     "wlc": {
-      "name": "Louisiana (WLC)",
+      "name": "Western Louisiana Coast (WLC)",
       "center": [30.20, -92.85],
       "zoom": 8,
       "tiles": ["019", "023"],

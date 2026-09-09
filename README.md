@@ -5,8 +5,8 @@ NOAA JPSS VIIRS daily flood-map composites.
 
 | Region | Observation history | Forecast |
 | --- | ---: | ---: |
-| Mississippi River Basin (UMAP) | 7 days | 3 days |
-| Louisiana (WLC) | 9 days | 3 days |
+| Upper Mississippi Alluvial Plain (UMAP) | 7 days | 3 days |
+| Western Louisiana Coast (WLC) | 9 days | 3 days |
 
 The public map is available at:
 
