@@ -13,10 +13,11 @@
 
 html, body { height: 100%; margin: 0; }
 
-body { background: #f5f6f8; color: var(--text); }
+body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--text); }
 
 #header {
-    min-height: 82px;
+    flex: 0 0 auto;
+    min-height: 102px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -39,7 +40,7 @@ body { background: #f5f6f8; color: var(--text); }
     background: rgba(255, 255, 255, 0.13);
 }
 
-#container { display: flex; height: calc(100% - 82px); position: relative; }
+#container { display: flex; flex: 1; min-height: 0; position: relative; }
 
 #sidebar {
     width: 365px;
@@ -117,9 +118,16 @@ body { background: #f5f6f8; color: var(--text); }
 .metadata-card dt { color: var(--muted); }
 .metadata-card dd { margin: 0; overflow-wrap: anywhere; }
 
-.legend { padding: 14px; border-radius: 6px; box-shadow: 0 2px 7px rgba(0, 0, 0, 0.1); }
-.legend-item { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 13px; }
-.legend-item i { width: 31px; height: 19px; border: 1px solid #aaa; border-radius: 3px; }
+.uh-logo { width: 72px; height: 72px; flex: 0 0 auto; object-fit: contain; border-radius: 50%; background: white; }
+.header-title { flex: 1; min-width: 0; }
+#header .developer-credit { margin-top: 7px; font-size: 13px; opacity: 1; }
+.forecast-legend { padding: 12px 14px 18px; border-radius: 6px; background: rgba(255, 255, 255, 0.96); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); color: #263238; }
+.legend-title { margin-bottom: 14px; font-size: 12px; font-weight: 600; }
+.legend-scale { display: flex; justify-content: center; height: 220px; }
+.legend-scale canvas { display: block; width: 22px; height: 100%; border: 1px solid #222; }
+.legend-ticks { position: relative; width: 38px; }
+.legend-ticks span { position: absolute; left: 0; padding-left: 10px; transform: translateY(-50%); font-size: 12px; line-height: 1; }
+.legend-ticks span::before { content: ""; position: absolute; left: 0; top: 50%; width: 5px; border-top: 1px solid #222; }
 
 .info-box {
     padding: 12px;
@@ -161,14 +169,17 @@ body { background: #f5f6f8; color: var(--text); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 760px) {
-    #header { min-height: 94px; padding: 12px 15px; }
+    #header { gap: 12px; padding: 12px 15px; }
+    .uh-logo { width: 56px; height: 56px; }
+    .legend-scale { height: 160px; }
+    .forecast-legend { padding: 10px 10px 16px; }
     #header h1 { font-size: 20px; }
     #header p { font-size: 12px; }
     .research-badge { display: none; }
-    #container { height: calc(100% - 94px); flex-direction: column; }
+    #container { flex-direction: column; }
     #sidebar { width: 100%; flex: 0 0 285px; padding: 14px; }
     #map { min-height: 330px; }
     .control-section { margin-bottom: 15px; }
-    .metadata-card, .legend, .info-box { display: none; }
+    .metadata-card, .info-box { display: none; }
     .loading { left: 50%; top: calc(285px + (100% - 285px) / 2); }
 }

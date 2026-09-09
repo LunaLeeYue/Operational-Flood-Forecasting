@@ -67,12 +67,30 @@ function clearForecastLayers() {
 }
 
 function colorForValue(value) {
-    if (value < 0.3) return "#0000ff";
-    if (value < 0.5) return "#00ffff";
-    if (value < 0.7) return "#ffff00";
-    if (value < 0.9) return "#ff7f00";
-    return "#ff0000";
+    const index = Math.min(255, Math.floor(Math.max(0, Math.min(1, value)) * 256));
+    return WATER_COLORS[index];
 }
+
+// Use the same 256-color jet lookup table as the published raster.
+const legend = L.control({ position: "bottomright" });
+legend.onAdd = () => {
+    const panel = L.DomUtil.create("div", "forecast-legend");
+    panel.setAttribute("role", "img");
+    panel.setAttribute("aria-label", "Water fraction color scale: 0 to 100 percent, dark blue through cyan, yellow and red");
+    panel.innerHTML = `<div class="legend-title">Water fraction (%)</div>
+        <div class="legend-scale"><canvas width="1" height="256" aria-hidden="true"></canvas>
+        <div class="legend-ticks">${[100, 80, 60, 40, 20, 0].map(value =>
+            `<span style="top:${100 - value}%">${value}</span>`).join("")}</div></div>`;
+    const context = panel.querySelector("canvas").getContext("2d");
+    WATER_COLORS.forEach((color, index) => {
+        context.fillStyle = color;
+        context.fillRect(0, 255 - index, 1, 1);
+    });
+    L.DomEvent.disableClickPropagation(panel);
+    L.DomEvent.disableScrollPropagation(panel);
+    return panel;
+};
+legend.addTo(map);
 
 function updateDateButtons() {
     document.querySelectorAll("#date-selector .date-btn").forEach((button, index) => {

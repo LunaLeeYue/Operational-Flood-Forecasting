@@ -10,9 +10,11 @@
 </head>
 <body>
     <header id="header">
-        <div>
+        <img class="uh-logo" src="assets/uh-logo.png" alt="University of Houston seal" width="72" height="72">
+        <div class="header-title">
             <h1>🌊 Near-real-time Flood Prediction</h1>
             <p>ConvLSTM three-day forecasts using NOAA JPSS VIIRS daily flood maps</p>
+            <p class="developer-credit">Developer: <strong>Yue Li</strong></p>
         </div>
         <span class="research-badge">Research product</span>
     </header>
@@ -62,15 +64,6 @@
                 </dl>
             </section>
 
-            <section class="control-section legend">
-                <h2>🎨 Flood Water Fraction</h2>
-                <div class="legend-item"><i style="background:#0000ff"></i><span>0–30%</span></div>
-                <div class="legend-item"><i style="background:#00ffff"></i><span>30–50%</span></div>
-                <div class="legend-item"><i style="background:#ffff00"></i><span>50–70%</span></div>
-                <div class="legend-item"><i style="background:#ff7f00"></i><span>70–90%</span></div>
-                <div class="legend-item"><i style="background:#ff0000"></i><span>90–100%</span></div>
-            </section>
-
             <section class="info-box">
                 <strong>ℹ️ About</strong>
                 <p>UMAP uses seven observed days and WLC uses nine observed days. Both models predict the following three days.</p>
@@ -87,6 +80,7 @@
     </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="colormap.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
