@@ -109,7 +109,7 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
 .metadata-card dt { color: var(--muted); }
 .metadata-card dd { margin: 0; overflow-wrap: anywhere; }
 
-.uh-logo { align-self: flex-start; width: 132px; height: 90px; padding: 6px; flex: 0 0 auto; object-fit: contain; border-radius: 4px; background: white; }
+.uh-logo { align-self: flex-start; width: 132px; height: 90px; padding: 6px; flex: 0 0 auto; object-fit: contain; background: transparent; }
 .header-title { flex: 1; min-width: 0; }
 #header .developer-credit { margin-top: 7px; font-size: 13px; opacity: 1; }
 .forecast-legend { padding: 12px 14px 18px; border-radius: 6px; background: rgba(255, 255, 255, 0.96); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); color: #263238; }
