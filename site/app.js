@@ -84,7 +84,7 @@ function updateInputControls() {
     document.getElementById("input-ticks").innerHTML = inputs.map((_, index) =>
         `<span class="${index === state.inputIndex ? "selected" : ""}" style="left:${inputs.length > 1 ? index / (inputs.length - 1) * 100 : 0}%">${index + 1}</span>`).join("");
     document.getElementById("input-help").textContent = inputs.length
-        ? `${inputs.length} observed days. Drag to show an input image; uncheck to return to the forecast.`
+        ? `Drag to show an input image; uncheck to return to the forecast.`
         : "Input images are not available for this publication.";
 }
 function applyOpacity() {
