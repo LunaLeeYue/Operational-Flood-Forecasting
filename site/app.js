@@ -41,13 +41,23 @@ const satellite = L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/ser
 const mapControls = L.control({ position: "topright" });
 mapControls.onAdd = () => {
     const panel = L.DomUtil.create("div", "map-controls");
-    panel.innerHTML = `<label for="basemap-select">Basemap</label>
+    panel.innerHTML = `<button class="map-controls-toggle" type="button" aria-label="Expand map settings" aria-expanded="false" aria-controls="map-settings" title="Map settings">&#9666;</button>
+        <div id="map-settings" hidden><label for="basemap-select">Basemap</label>
         <select id="basemap-select" aria-label="Basemap">
             <option value="streets">Street map</option><option value="satellite">Satellite imagery</option>
         </select>
         <label for="opacity-slider">Layer opacity <output id="opacity-value">72%</output></label>
         <input id="opacity-slider" aria-label="Layer opacity" type="range" min="0" max="100" step="1" value="72">
-        <div class="opacity-endpoints"><span>Hidden</span><span>Opaque</span></div>`;
+        <div class="opacity-endpoints"><span>Hidden</span><span>Opaque</span></div></div>`;
+    const toggle = panel.querySelector(".map-controls-toggle");
+    toggle.addEventListener("click", () => {
+        const expanded = toggle.getAttribute("aria-expanded") !== "true";
+        toggle.setAttribute("aria-expanded", String(expanded));
+        toggle.setAttribute("aria-label", expanded ? "Collapse map settings" : "Expand map settings");
+        toggle.innerHTML = expanded ? "&#9656;" : "&#9666;";
+        panel.querySelector("#map-settings").hidden = !expanded;
+        panel.classList.toggle("expanded", expanded);
+    });
     L.DomEvent.disableClickPropagation(panel);
     L.DomEvent.disableScrollPropagation(panel);
     return panel;
@@ -65,6 +75,16 @@ function updateInputControls() {
     inputSlider.max = Math.max(0, inputs.length - 1);
     inputSlider.value = state.inputIndex;
     document.getElementById("input-date").textContent = inputs[state.inputIndex]?.date || "Unavailable";
+    document.getElementById("history-count").textContent = `${inputs.length} days`;
+    document.getElementById("input-start").textContent = inputs[0]?.date || "—";
+    document.getElementById("input-end").textContent = inputs.at(-1)?.date || "—";
+    document.getElementById("input-position").textContent = inputs.length ? `Day ${state.inputIndex + 1} of ${inputs.length}` : "No observations";
+    document.getElementById("input-prev").disabled = !inputs.length || state.inputIndex === 0;
+    document.getElementById("input-next").disabled = !inputs.length || state.inputIndex >= inputs.length - 1;
+    inputSlider.setAttribute("aria-valuetext", inputs.length ? `${inputs[state.inputIndex]?.date}, day ${state.inputIndex + 1} of ${inputs.length}` : "Unavailable");
+    inputSlider.style.setProperty("--progress", `${inputs.length > 1 ? state.inputIndex / (inputs.length - 1) * 100 : 0}%`);
+    document.getElementById("input-ticks").innerHTML = inputs.map((_, index) =>
+        `<span class="${index === state.inputIndex ? "selected" : ""}" style="left:${inputs.length > 1 ? index / (inputs.length - 1) * 100 : 0}%">${index + 1}</span>`).join("");
     document.getElementById("input-help").textContent = inputs.length
         ? `${inputs.length} observed days. Drag to show an input image; uncheck to return to the forecast.`
         : "Input images are not available for this publication.";
@@ -94,6 +114,17 @@ inputSlider.addEventListener("input", () => {
     updateInputControls();
     loadForecastLayers();
 });
+
+for (const [id, direction] of [["input-prev", -1], ["input-next", 1]]) {
+    document.getElementById(id).addEventListener("click", () => {
+        const count = state.region?.input_assets?.length || 0;
+        if (!count) return;
+        state.inputIndex = Math.max(0, Math.min(count - 1, state.inputIndex + direction));
+        state.showInputs = true;
+        updateInputControls();
+        loadForecastLayers();
+    });
+}
 
 function cacheBusted(path) {
     const separator = path.includes("?") ? "&" : "?";

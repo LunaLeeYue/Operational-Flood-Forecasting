@@ -6,7 +6,7 @@
     <meta name="description" content="Near-real-time ConvLSTM flood forecasts from NOAA VIIRS data">
     <title>Near-real-time Flood Prediction | ConvLSTM</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=map-controls-2">
+    <link rel="stylesheet" href="styles.css?v=timeline-3">
 </head>
 <body>
     <header id="header">
@@ -48,8 +48,20 @@
             <section class="control-section">
                 <h2>Model Input Observations</h2>
                 <label class="input-toggle"><input id="show-inputs" type="checkbox" disabled> Show input observations</label>
-                <label for="input-slider">Observation date: <output id="input-date">Unavailable</output></label>
-                <input id="input-slider" type="range" min="0" max="0" value="0" step="1" disabled>
+                <div class="timeline-card">
+                    <div class="timeline-heading"><label for="input-slider">Input observation</label><span id="history-count" class="history-count">0 days</span></div>
+                    <output id="input-date" class="selected-date" aria-live="polite">Unavailable</output>
+                    <div class="timeline-navigation">
+                        <button id="input-prev" class="timeline-arrow" aria-label="Previous observation" disabled>&#9664;</button>
+                        <div class="timeline-track">
+                            <input id="input-slider" type="range" min="0" max="0" value="0" step="1" disabled>
+                            <div id="input-ticks" class="timeline-ticks" aria-hidden="true"></div>
+                        </div>
+                        <button id="input-next" class="timeline-arrow" aria-label="Next observation" disabled>&#9654;</button>
+                    </div>
+                    <div class="timeline-dates"><span id="input-start">—</span><span id="input-end">—</span></div>
+                    <div id="input-position" class="timeline-position">No observations</div>
+                </div>
                 <p id="input-help" class="button-help">Input images will appear after the next forecast publication.</p>
                 <p class="button-help">Cloud / invalid pixels are transparent.</p>
             </section>
@@ -85,6 +97,6 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="colormap.js"></script>
-    <script src="app.js?v=map-controls-2"></script>
+    <script src="app.js?v=timeline-3"></script>
 </body>
 </html>
