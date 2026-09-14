@@ -6,7 +6,7 @@
     <meta name="description" content="Near-real-time ConvLSTM flood forecasts from NOAA VIIRS data">
     <title>Near-real-time Flood Prediction | ConvLSTM</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=map-controls-2">
 </head>
 <body>
     <header id="header">
@@ -43,22 +43,6 @@
                     <button class="mode-btn" data-mode="points">Mark</button>
                     <button class="mode-btn" data-mode="both">Both</button>
                 </div>
-            </section>
-
-            <section class="control-section">
-                <h2>Layer Opacity</h2>
-                <label for="opacity-slider">Opacity <output id="opacity-value">72%</output></label>
-                <input id="opacity-slider" type="range" min="0" max="100" value="72" step="1">
-                <p class="button-help">0% shows only the basemap; 100% shows the full data layer.</p>
-            </section>
-
-            <section class="control-section">
-                <h2>Basemap</h2>
-                <select id="basemap-select" class="aoi-select" aria-label="Basemap">
-                    <option value="streets">Street map</option>
-                    <option value="satellite">Satellite imagery</option>
-                </select>
-                <p class="button-help">Satellite imagery is background context, not a live flood observation.</p>
             </section>
 
             <section class="control-section">
@@ -101,6 +85,6 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="colormap.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=map-controls-2"></script>
 </body>
 </html>

@@ -37,6 +37,22 @@ const satellite = L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/ser
     attribution: 'Imagery © Esri, Vantor, Earthstar Geographics, and the GIS User Community',
     maxZoom: 18,
 });
+// Keep visual controls on the map, separate from the observation timeline.
+const mapControls = L.control({ position: "topright" });
+mapControls.onAdd = () => {
+    const panel = L.DomUtil.create("div", "map-controls");
+    panel.innerHTML = `<label for="basemap-select">Basemap</label>
+        <select id="basemap-select" aria-label="Basemap">
+            <option value="streets">Street map</option><option value="satellite">Satellite imagery</option>
+        </select>
+        <label for="opacity-slider">Layer opacity <output id="opacity-value">72%</output></label>
+        <input id="opacity-slider" aria-label="Layer opacity" type="range" min="0" max="100" step="1" value="72">
+        <div class="opacity-endpoints"><span>Hidden</span><span>Opaque</span></div>`;
+    L.DomEvent.disableClickPropagation(panel);
+    L.DomEvent.disableScrollPropagation(panel);
+    return panel;
+};
+mapControls.addTo(map);
 const opacitySlider = document.getElementById("opacity-slider");
 const inputSlider = document.getElementById("input-slider");
 const inputToggle = document.getElementById("show-inputs");
@@ -54,12 +70,14 @@ function updateInputControls() {
         : "Input images are not available for this publication.";
     document.querySelectorAll(".mode-btn").forEach(button => { button.disabled = state.showInputs; });
 }
-opacitySlider.addEventListener("input", () => {
+function applyOpacity() {
     state.opacity = Number(opacitySlider.value) / 100;
     document.getElementById("opacity-value").textContent = `${opacitySlider.value}%`;
     state.rasterLayer?.setOpacity(state.opacity);
     state.pointLayer?.setStyle({opacity: state.opacity, fillOpacity: state.opacity});
-});
+}
+opacitySlider.addEventListener("input", applyOpacity);
+opacitySlider.addEventListener("change", applyOpacity);
 document.getElementById("basemap-select").addEventListener("change", event => {
     map.removeLayer(streets);
     map.removeLayer(satellite);

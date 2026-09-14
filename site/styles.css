@@ -170,3 +170,14 @@ input:disabled { cursor: not-allowed; }
 .control-section output { font-weight: 600; }
 .input-toggle { margin-bottom: 12px; }
 .input-toggle input { accent-color: var(--accent); }
+
+.map-controls { width: 190px; padding: 12px; border-radius: 6px; background: rgba(255,255,255,.97); box-shadow: 0 2px 8px rgba(0,0,0,.2); color: var(--text); }
+.map-controls label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; }
+.map-controls select { width: 100%; margin: 6px 0 12px; padding: 6px; border: 1px solid var(--line); border-radius: 4px; background: white; }
+.map-controls input[type="range"] { margin: 8px 0 2px; }
+.opacity-endpoints { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+@media (max-width: 760px) {
+    .map-controls { width: 156px; padding: 8px; }
+    .legend-scale { height: 100px; }
+    #map { min-height: 400px; }
+}
