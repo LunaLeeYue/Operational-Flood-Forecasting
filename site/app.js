@@ -25,7 +25,11 @@ const elements = {
     modelLabel: document.getElementById("model-label"),
 };
 
-const map = L.map("map").setView([34.2, -91.5], 6);
+const map = L.map("map", {
+    zoomSnap: 0.25,
+    zoomDelta: 0.25,
+    wheelPxPerZoomLevel: 240,
+}).setView([34.2, -91.5], 6);
 const streets = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors",
     maxZoom: 18,
