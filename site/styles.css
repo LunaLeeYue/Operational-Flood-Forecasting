@@ -68,7 +68,7 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
 
 .button-row { display: flex; flex-wrap: wrap; gap: 6px; }
 
-.date-btn, .mode-btn {
+.date-btn {
     flex: 1 1 90px;
     padding: 8px;
     border: 2px solid var(--line);
@@ -80,8 +80,8 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
     transition: border-color 0.2s, background 0.2s;
 }
 
-.date-btn:hover, .mode-btn:hover { border-color: var(--accent); }
-.date-btn.active, .mode-btn.active { border-color: var(--accent); background: var(--accent); color: white; }
+.date-btn:hover { border-color: var(--accent); }
+.date-btn.active { border-color: var(--accent); background: var(--accent); color: white; }
 
 .update-btn {
     width: 100%;
@@ -112,7 +112,7 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
 .uh-logo { align-self: flex-start; width: 132px; height: 90px; padding: 6px; flex: 0 0 auto; object-fit: contain; background: transparent; }
 .header-title { flex: 1; min-width: 0; }
 #header .developer-credit { margin-top: 7px; font-size: 13px; opacity: 1; }
-.forecast-legend { padding: 12px 14px 18px; border-radius: 6px; background: rgba(255, 255, 255, 0.72); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,.5); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); color: #263238; }
+.forecast-legend { padding: 12px 14px 18px; border-radius: 6px; background: rgba(255, 255, 255, 0.48); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,.5); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); color: #263238; }
 .legend-title { margin-bottom: 14px; font-size: 12px; font-weight: 600; }
 .legend-scale { display: flex; justify-content: center; height: 220px; }
 .legend-scale canvas { display: block; width: 22px; height: 100%; border: 1px solid #222; }

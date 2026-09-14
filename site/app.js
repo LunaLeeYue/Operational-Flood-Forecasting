@@ -1,7 +1,7 @@
 "use strict";
 
 const state = {
-    opacity: 0.72,
+    opacity: 0.75,
     inputIndex: 0,
     showInputs: false,
     layerRequest: 0,
@@ -10,9 +10,7 @@ const state = {
     regionId: null,
     region: null,
     leadIndex: 0,
-    displayMode: "raster",
     rasterLayer: null,
-    pointLayer: null,
 };
 
 const elements = {
@@ -46,8 +44,8 @@ mapControls.onAdd = () => {
         <select id="basemap-select" aria-label="Basemap">
             <option value="streets">Street map</option><option value="satellite">Satellite imagery</option>
         </select>
-        <label for="opacity-slider">Layer opacity <output id="opacity-value">72%</output></label>
-        <input id="opacity-slider" aria-label="Layer opacity" type="range" min="0" max="100" step="1" value="72">
+        <label for="opacity-slider">Layer opacity <output id="opacity-value">75%</output></label>
+        <input id="opacity-slider" aria-label="Layer opacity" type="range" min="0" max="100" step="1" value="75">
         <div class="opacity-endpoints"><span>Hidden</span><span>Opaque</span></div></div>`;
     const toggle = panel.querySelector(".map-controls-toggle");
     toggle.addEventListener("click", () => {
@@ -88,13 +86,11 @@ function updateInputControls() {
     document.getElementById("input-help").textContent = inputs.length
         ? `${inputs.length} observed days. Drag to show an input image; uncheck to return to the forecast.`
         : "Input images are not available for this publication.";
-    document.querySelectorAll(".mode-btn").forEach(button => { button.disabled = state.showInputs; });
 }
 function applyOpacity() {
     state.opacity = Number(opacitySlider.value) / 100;
     document.getElementById("opacity-value").textContent = `${opacitySlider.value}%`;
     state.rasterLayer?.setOpacity(state.opacity);
-    state.pointLayer?.setStyle({opacity: state.opacity, fillOpacity: state.opacity});
 }
 opacitySlider.addEventListener("input", applyOpacity);
 opacitySlider.addEventListener("change", applyOpacity);
@@ -158,15 +154,7 @@ function clearForecastLayers() {
         map.removeLayer(state.rasterLayer);
         state.rasterLayer = null;
     }
-    if (state.pointLayer) {
-        map.removeLayer(state.pointLayer);
-        state.pointLayer = null;
-    }
-}
 
-function colorForValue(value) {
-    const index = Math.min(255, Math.floor(Math.max(0, Math.min(1, value)) * 256));
-    return WATER_COLORS[index];
 }
 
 // Use the same 256-color jet lookup table as the published raster.
@@ -211,7 +199,6 @@ async function loadForecastLayers() {
     if (!state.region) return;
     const region = state.region;
     const isInput = state.showInputs;
-    const mode = state.displayMode;
     const asset = isInput ? region.input_assets?.[state.inputIndex] : region.assets[state.leadIndex];
     if (!asset) return;
     const request = ++state.layerRequest;
@@ -219,7 +206,7 @@ async function loadForecastLayers() {
     showLoading(`Loading ${label}…`);
     clearForecastLayers();
     try {
-        if (isInput || mode === "raster" || mode === "both") {
+        {
             const layer = L.imageOverlay(cacheBusted(asset.raster), region.bounds,
                 { opacity: state.opacity, interactive: false });
             state.rasterLayer = layer;
@@ -229,19 +216,6 @@ async function loadForecastLayers() {
                 layer.addTo(map);
             });
             if (request !== state.layerRequest) return;
-        }
-        if (!isInput && (mode === "points" || mode === "both")) {
-            const geojson = await fetchJson(asset.points);
-            if (request !== state.layerRequest) return;
-            state.pointLayer = L.geoJSON(geojson, {
-                pointToLayer: (feature, latlng) => L.circleMarker(latlng, {
-                    radius: 5, fillColor: colorForValue(feature.properties.water_fraction),
-                    color: "#202020", weight: 1, opacity: state.opacity, fillOpacity: state.opacity,
-                }),
-                onEachFeature: (feature, layer) => layer.bindPopup(
-                    `<strong>Water Fraction:</strong> ${(feature.properties.water_fraction * 100).toFixed(1)}%<br>` +
-                    `<strong>Level:</strong> ${feature.properties.flood_level}`),
-            }).addTo(map);
         }
         if (request === state.layerRequest) showStatus(`Showing ${label}`, "success");
     } catch (error) {
@@ -314,16 +288,6 @@ document.querySelectorAll("#date-selector .date-btn").forEach((button) => {
         updateInputControls();
         state.leadIndex = Number(button.dataset.index);
         updateDateButtons();
-        loadForecastLayers();
-    });
-});
-
-document.querySelectorAll(".mode-btn").forEach((button) => {
-    button.addEventListener("click", () => {
-        state.displayMode = button.dataset.mode;
-        document.querySelectorAll(".mode-btn").forEach((candidate) => {
-            candidate.classList.toggle("active", candidate === button);
-        });
         loadForecastLayers();
     });
 });
