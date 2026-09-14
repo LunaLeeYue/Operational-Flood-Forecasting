@@ -4,6 +4,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 import numpy as np
@@ -63,12 +64,27 @@ class DataAndPublishTests(unittest.TestCase):
             output = Path(directory)
             metadata = publish_region("test", region, raw, predictions, mask, output)
             self.assertEqual(metadata["prediction_dates"], ["2026-01-03", "2026-01-04", "2026-01-05"])
+            self.assertEqual([item["date"] for item in metadata["input_assets"]], ["2026-01-01", "2026-01-02"])
+            for item in metadata["input_assets"]:
+                self.assertTrue((output / item["raster"].removeprefix("data/")).is_file())
             self.assertEqual(metadata["model"], {"history_days": 2, "forecast_days": 3})
             self.assertTrue((output / "test/latest.json").is_file())
             self.assertTrue((output / "test/maps/day-1.png").is_file())
             self.assertTrue((output / "test/points/day-1.geojson").is_file())
             with (output / "test/points/day-1.geojson").open(encoding="utf-8") as handle:
                 self.assertEqual(json.load(handle)["type"], "FeatureCollection")
+
+    def test_input_images_preserve_model_values_and_mask_missing_pixels(self):
+        raw = xr.Dataset({"water_fraction": (("time", "lat", "lon"), [[[150, 30], [99, 15]]])},
+                         coords={"time": [np.datetime64("2026-01-01")], "lat": [1, 0], "lon": [0, 1]})
+        processed = preprocess(raw)
+        region = {"name": "Test", "pred_len": 1, "input_len": 1, "center": [0, 0], "zoom": 8}
+        mask = np.array([[True, True], [False, True]])
+        with tempfile.TemporaryDirectory() as directory, patch("flood_app.publish.save_forecast_png") as save:
+            publish_region("test", region, raw, np.zeros((1, 2, 2)), mask, Path(directory), processed=processed)
+            frame = save.call_args_list[-1].args[0]
+            np.testing.assert_allclose(frame, [[0.5, np.nan], [np.nan, 0.0]], equal_nan=True)
+            self.assertEqual(float(processed.values[0, 0, 1, 0]), -1.0)
 
     def test_near_zero_water_is_visible_blue(self):
         with tempfile.TemporaryDirectory() as directory:

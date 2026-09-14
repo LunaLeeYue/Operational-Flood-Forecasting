@@ -125,6 +125,7 @@ def main() -> int:
                 predictions,
                 mask,
                 args.output.resolve(),
+                processed=processed,
             )
             print(
                 f"Published {region_id}: observation "

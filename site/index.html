@@ -46,6 +46,31 @@
             </section>
 
             <section class="control-section">
+                <h2>Layer Opacity</h2>
+                <label for="opacity-slider">Opacity <output id="opacity-value">72%</output></label>
+                <input id="opacity-slider" type="range" min="0" max="100" value="72" step="1">
+                <p class="button-help">0% shows only the basemap; 100% shows the full data layer.</p>
+            </section>
+
+            <section class="control-section">
+                <h2>Basemap</h2>
+                <select id="basemap-select" class="aoi-select" aria-label="Basemap">
+                    <option value="streets">Street map</option>
+                    <option value="satellite">Satellite imagery</option>
+                </select>
+                <p class="button-help">Satellite imagery is background context, not a live flood observation.</p>
+            </section>
+
+            <section class="control-section">
+                <h2>Model Input Observations</h2>
+                <label class="input-toggle"><input id="show-inputs" type="checkbox" disabled> Show input observations</label>
+                <label for="input-slider">Observation date: <output id="input-date">Unavailable</output></label>
+                <input id="input-slider" type="range" min="0" max="0" value="0" step="1" disabled>
+                <p id="input-help" class="button-help">Input images will appear after the next forecast publication.</p>
+                <p class="button-help">NOAA VIIRS water fraction used by the model. Cloud / invalid pixels and areas outside the region are transparent. These are pre-forecast observations.</p>
+            </section>
+
+            <section class="control-section">
                 <button id="update-btn" class="update-btn">🔄 Check Latest Forecast</button>
                 <p class="button-help">Forecasts are generated automatically by GitHub Actions.</p>
             </section>

@@ -37,3 +37,11 @@ to test an archived NOAA date.
 
 This is a near-real-time research forecast, not a minute-by-minute operational
 feed. It must not be used as the sole basis for emergency decisions.
+
+## Map controls
+
+- **Layer Opacity** adjusts the forecast raster, markers, or selected input observation from 0–100%.
+- **Basemap** switches between OpenStreetMap and Esri World Imagery. Satellite imagery is background context, not a current flood observation.
+- **Model Input Observations** shows the actual preprocessed water-fraction channel used by the model (7 days for UMAP, 9 for WLC). Drag the date slider to show an input raster. Uncheck the option or select a prediction date to return to forecasts. Invalid/cloud pixels and pixels outside the AOI are transparent; no-data is not interpreted as dry land.
+
+Input rasters are published with each forecast under `site/data/<region>/inputs/` and listed in `input_assets` in regional metadata. Older publications without these assets keep the input controls disabled.

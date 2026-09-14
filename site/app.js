@@ -1,6 +1,11 @@
 "use strict";
 
 const state = {
+    opacity: 0.72,
+    inputIndex: 0,
+    showInputs: false,
+    layerRequest: 0,
+    regionRequest: 0,
     catalog: null,
     regionId: null,
     region: null,
@@ -23,10 +28,54 @@ const elements = {
 };
 
 const map = L.map("map").setView([34.2, -91.5], 6);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+const streets = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors",
     maxZoom: 18,
 }).addTo(map);
+
+const satellite = L.tileLayer("https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+    attribution: 'Imagery © Esri, Vantor, Earthstar Geographics, and the GIS User Community',
+    maxZoom: 18,
+});
+const opacitySlider = document.getElementById("opacity-slider");
+const inputSlider = document.getElementById("input-slider");
+const inputToggle = document.getElementById("show-inputs");
+function updateInputControls() {
+    const inputs = state.region?.input_assets || [];
+    inputToggle.disabled = !inputs.length;
+    if (!inputs.length) state.showInputs = false;
+    inputToggle.checked = state.showInputs;
+    inputSlider.disabled = !inputs.length;
+    inputSlider.max = Math.max(0, inputs.length - 1);
+    inputSlider.value = state.inputIndex;
+    document.getElementById("input-date").textContent = inputs[state.inputIndex]?.date || "Unavailable";
+    document.getElementById("input-help").textContent = inputs.length
+        ? `${inputs.length} observed days. Drag to show an input image; uncheck to return to the forecast.`
+        : "Input images are not available for this publication.";
+    document.querySelectorAll(".mode-btn").forEach(button => { button.disabled = state.showInputs; });
+}
+opacitySlider.addEventListener("input", () => {
+    state.opacity = Number(opacitySlider.value) / 100;
+    document.getElementById("opacity-value").textContent = `${opacitySlider.value}%`;
+    state.rasterLayer?.setOpacity(state.opacity);
+    state.pointLayer?.setStyle({opacity: state.opacity, fillOpacity: state.opacity});
+});
+document.getElementById("basemap-select").addEventListener("change", event => {
+    map.removeLayer(streets);
+    map.removeLayer(satellite);
+    (event.target.value === "satellite" ? satellite : streets).addTo(map);
+});
+inputToggle.addEventListener("change", () => {
+    state.showInputs = inputToggle.checked;
+    updateInputControls();
+    loadForecastLayers();
+});
+inputSlider.addEventListener("input", () => {
+    state.inputIndex = Number(inputSlider.value);
+    state.showInputs = true;
+    updateInputControls();
+    loadForecastLayers();
+});
 
 function cacheBusted(path) {
     const separator = path.includes("?") ? "&" : "?";
@@ -111,63 +160,74 @@ function updateMetadata() {
 
 async function loadForecastLayers() {
     if (!state.region) return;
-    const asset = state.region.assets[state.leadIndex];
+    const region = state.region;
+    const isInput = state.showInputs;
+    const mode = state.displayMode;
+    const asset = isInput ? region.input_assets?.[state.inputIndex] : region.assets[state.leadIndex];
     if (!asset) return;
-
-    showLoading(`Loading forecast for ${asset.date}…`);
+    const request = ++state.layerRequest;
+    const label = `${asset.date} ${isInput ? "input observation" : "forecast"}`;
+    showLoading(`Loading ${label}…`);
     clearForecastLayers();
     try {
-        if (state.displayMode === "raster" || state.displayMode === "both") {
-            state.rasterLayer = L.imageOverlay(
-                cacheBusted(asset.raster),
-                state.region.bounds,
-                { opacity: 0.72, interactive: false }
-            ).addTo(map);
+        if (isInput || mode === "raster" || mode === "both") {
+            const layer = L.imageOverlay(cacheBusted(asset.raster), region.bounds,
+                { opacity: state.opacity, interactive: false });
+            state.rasterLayer = layer;
+            await new Promise((resolve, reject) => {
+                layer.once("load", resolve);
+                layer.once("error", () => reject(new Error("Image could not be loaded")));
+                layer.addTo(map);
+            });
+            if (request !== state.layerRequest) return;
         }
-
-        if (state.displayMode === "points" || state.displayMode === "both") {
+        if (!isInput && (mode === "points" || mode === "both")) {
             const geojson = await fetchJson(asset.points);
+            if (request !== state.layerRequest) return;
             state.pointLayer = L.geoJSON(geojson, {
                 pointToLayer: (feature, latlng) => L.circleMarker(latlng, {
-                    radius: 5,
-                    fillColor: colorForValue(feature.properties.water_fraction),
-                    color: "#202020",
-                    weight: 1,
-                    opacity: 0.85,
-                    fillOpacity: 0.8,
+                    radius: 5, fillColor: colorForValue(feature.properties.water_fraction),
+                    color: "#202020", weight: 1, opacity: state.opacity, fillOpacity: state.opacity,
                 }),
-                onEachFeature: (feature, layer) => {
-                    const value = (feature.properties.water_fraction * 100).toFixed(1);
-                    layer.bindPopup(
-                        `<strong>Water Fraction:</strong> ${value}%<br>` +
-                        `<strong>Level:</strong> ${feature.properties.flood_level}`
-                    );
-                },
+                onEachFeature: (feature, layer) => layer.bindPopup(
+                    `<strong>Water Fraction:</strong> ${(feature.properties.water_fraction * 100).toFixed(1)}%<br>` +
+                    `<strong>Level:</strong> ${feature.properties.flood_level}`),
             }).addTo(map);
         }
-        showStatus(`Showing ${asset.date} forecast (${state.displayMode})`, "success");
+        if (request === state.layerRequest) showStatus(`Showing ${label}`, "success");
     } catch (error) {
+        if (request !== state.layerRequest) return;
         clearForecastLayers();
-        showStatus(`Could not load forecast: ${error.message}`, "error");
+        showStatus(`Could not load ${label}: ${error.message}`, "error");
     } finally {
-        hideLoading();
+        if (request === state.layerRequest) hideLoading();
     }
 }
 
 async function selectRegion(regionId) {
+    const request = ++state.regionRequest;
+    ++state.layerRequest;
+    state.region = null;
+    updateInputControls();
     state.regionId = regionId;
     state.leadIndex = 0;
     const catalogRegion = state.catalog.regions[regionId];
     showLoading(`Loading ${catalogRegion.name}…`);
     clearForecastLayers();
     try {
-        state.region = await fetchJson(catalogRegion.latest);
+        const region = await fetchJson(catalogRegion.latest);
+        if (request !== state.regionRequest) return;
+        state.region = region;
+        state.inputIndex = Math.max(0, (region.input_assets?.length || 0) - 1);
+        updateInputControls();
         map.fitBounds(state.region.bounds, { padding: [12, 12] });
         updateDateButtons();
         updateMetadata();
         await loadForecastLayers();
     } catch (error) {
+        if (request !== state.regionRequest) return;
         state.region = null;
+        updateInputControls();
         showStatus(`Forecast is not available yet: ${error.message}`, "warning");
         hideLoading();
     }
@@ -201,6 +261,8 @@ elements.aoiSelect.addEventListener("change", (event) => selectRegion(event.targ
 
 document.querySelectorAll("#date-selector .date-btn").forEach((button) => {
     button.addEventListener("click", () => {
+        state.showInputs = false;
+        updateInputControls();
         state.leadIndex = Number(button.dataset.index);
         updateDateButtons();
         loadForecastLayers();

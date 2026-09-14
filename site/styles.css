@@ -163,3 +163,10 @@ body { display: flex; flex-direction: column; background: #f5f6f8; color: var(--
     .metadata-card { display: none; }
     .loading { left: 50%; top: calc(285px + (100% - 285px) / 2); }
 }
+
+input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; margin: 12px 0 4px; }
+input:disabled { cursor: not-allowed; }
+.control-section label { display: block; font-size: 13px; line-height: 1.5; }
+.control-section output { font-weight: 600; }
+.input-toggle { margin-bottom: 12px; }
+.input-toggle input { accent-color: var(--accent); }

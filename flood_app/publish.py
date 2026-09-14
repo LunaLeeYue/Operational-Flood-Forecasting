@@ -97,6 +97,7 @@ def publish_region(
     predictions: np.ndarray,
     aoi_mask: np.ndarray,
     output_root: Path,
+    processed: xr.DataArray | None = None,
 ) -> dict:
     region_dir = output_root / region_id
     maps_dir = region_dir / "maps"
@@ -139,6 +140,17 @@ def publish_region(
         )
 
     input_dates = [str(np.datetime64(value, "D")) for value in raw_data.time.values]
+    # Publish the water-fraction channel actually passed to the model.
+    if processed is None:
+        from flood_app.data import preprocess
+        processed = preprocess(raw_data)
+    input_assets = []
+    for index, input_date in enumerate(input_dates):
+        frame = processed.sel(features="water_fraction").isel(time=index).values.copy()
+        frame[(frame < 0) | ~aoi_mask] = np.nan
+        name = f"input-{index + 1}.png"
+        save_forecast_png(frame, region_dir / "inputs" / name)
+        input_assets.append({"date": input_date, "raster": f"data/{region_id}/inputs/{name}"})
     metadata = {
         "status": "success",
         "region_id": region_id,
@@ -146,6 +158,7 @@ def publish_region(
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "latest_observation_date": observation_date,
         "input_dates": input_dates,
+        "input_assets": input_assets,
         "prediction_dates": prediction_dates,
         "bounds": [[south, west], [north, east]],
         "center": region["center"],
