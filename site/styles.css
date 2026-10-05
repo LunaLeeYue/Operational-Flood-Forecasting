@@ -207,3 +207,9 @@ input:disabled { cursor: not-allowed; }
 .timeline-dates { display: flex; justify-content: space-between; font-size: 10px; color: #68748b; margin-top: 1px; }
 .timeline-position { text-align: center; margin-top: 7px; font-size: 10px; color: #69738c; }
 button:focus-visible, input:focus-visible { outline: 2px solid #667eea; outline-offset: 3px; }
+
+.validation-panel { padding: 14px; background: #f4f6ff; border: 1px solid #e0e5f5; border-radius: 10px; }
+.validation-panel .aoi-select { margin-top: 6px; font-size: 12px; }
+.validation-note { color: #6b542a; background: #fff5da; border-radius: 6px; padding: 9px; font-size: 12px; line-height: 1.5; }
+.validation-panel a { display: inline-block; margin-top: 10px; font-size: 11px; color: #4657b0; }
+.view-badge { max-width: min(330px, 55vw); padding: 7px 10px; border-radius: 6px; background: rgba(255,255,255,.92); color: #34405e; font-size: 11px; box-shadow: 0 2px 7px #0002; }

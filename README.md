@@ -45,3 +45,11 @@ feed. It must not be used as the sole basis for emergency decisions.
 - **Model Input Observations** shows the actual preprocessed water-fraction channel used by the model (7 days for UMAP, 9 for WLC). Drag the date slider to show an input raster. Uncheck the option or select a prediction date to return to forecasts. Invalid/cloud pixels and pixels outside the AOI are transparent; no-data is not interpreted as dry land.
 
 Input rasters are published with each forecast under `site/data/<region>/inputs/` and listed in `input_assets` in regional metadata. Older publications without these assets keep the input controls disabled.
+
+## WLC historical comparison example
+
+The History & Validation selector includes the forecast run dated 2026-09-29. Its original Actions log confirms an input cutoff of 2026-09-28 and target dates 2026-09-29, 2026-09-30 and 2026-10-01. The original Pages artifact was no longer available, so this example is explicitly labelled a retrospective reconstruction, not a recovered operational forecast. It uses unchanged WLC model weights and archived NOAA inputs; the upstream archive may have been revised since issuance.
+
+Select a target date and toggle **Show observation instead of forecast** to compare the same date and map extent. Both layers use the same 0–100% water-fraction color scale and opacity. Invalid observation pixels remain transparent. This compares water fraction, including permanent water, rather than isolating new inundation.
+
+The six preview images, provenance metadata, and compressed numerical comparison (`comparison.nc`) are stored in `site/validation/wlc/2026-09-29/`, so daily Pages builds retain this example. Rebuild with `python scripts/build_validation_example.py`; it verifies exact dates and coordinate equality and records the model SHA-256. This first example does not yet implement automatic daily historical archiving.

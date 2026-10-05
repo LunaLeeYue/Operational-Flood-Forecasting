@@ -6,7 +6,7 @@
     <meta name="description" content="Near-real-time ConvLSTM flood forecasts from NOAA VIIRS data">
     <title>Near-real-time Flood Prediction | ConvLSTM</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=map-only-4">
+    <link rel="stylesheet" href="styles.css?v=validation-6">
 </head>
 <body>
     <header id="header">
@@ -25,6 +25,21 @@
                 <select id="aoi-select" class="aoi-select" aria-label="Select forecast region">
                     <option>Loading regions…</option>
                 </select>
+            </section>
+
+            <section class="control-section validation-panel">
+                <h2>History &amp; Validation</h2>
+                <label for="forecast-run">Forecast run</label>
+                <select id="forecast-run" class="aoi-select">
+                    <option value="latest">Latest forecast</option>
+                    <option value="2026-09-29">WLC · 2026-09-29 (reconstructed)</option>
+                </select>
+                <div id="validation-options" hidden>
+                    <p class="validation-note">Historical reconstruction — not the original issued forecast. Input cutoff: 2026-09-28.</p>
+                    <label class="input-toggle"><input type="checkbox" id="compare-observation"> Show observation instead of forecast</label>
+                    <p class="button-help">Select a target date below, then toggle to compare the same date and location. Clouds / invalid observations are transparent.</p>
+                    <a href="validation/wlc/2026-09-29/comparison.nc" download>Download comparison data (NetCDF)</a>
+                </div>
             </section>
 
             <section class="control-section">
@@ -90,6 +105,6 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="colormap.js"></script>
-    <script src="app.js?v=fine-zoom-5"></script>
+    <script src="app.js?v=validation-6"></script>
 </body>
 </html>
