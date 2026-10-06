@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Near-real-time ConvLSTM flood forecasts from NOAA VIIRS data">
-    <title>Near-real-time Flood Prediction | ConvLSTM</title>
+    <title>Near-real-time Flood Forecasting | ConvLSTM</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=retro-targets-1">
+    <link rel="icon" type="image/png" href="assets/flood-icon.png">
+    <link rel="stylesheet" href="styles.css?v=retro-navigation-1">
 </head>
 <body>
     <header id="header">
         <div class="header-title">
-            <h1>🌊 Near-real-time Flood Prediction</h1>
+            <h1><img class="app-icon" src="assets/flood-icon.png" alt="" width="36" height="36"> Near-real-time Flood Forecasting</h1>
             <p>ConvLSTM 3-day forecasts using NOAA JPSS VIIRS daily flood maps</p>
             <p class="developer-credit">Developer: <strong>Yue Li</strong> (University of Houston)</p>
         </div>
@@ -86,11 +87,16 @@
             </div>
             <div id="retro-sidebar" hidden>
                 <section class="control-section">
-                    <h2>Retrospective Forecast</h2>
-                    <label for="retro-region">Region</label>
-                    <select id="retro-region" class="aoi-select"><option value="wlc">Western Louisiana Coast (WLC)</option><option value="umap">Upper Mississippi Alluvial Plain (UMAP)</option></select>
-                    <label for="retro-date">Target observation date</label>
-                    <input id="retro-date" type="date">
+                    <h2>📍 Select Region (AOI)</h2>
+                    <select id="retro-region" class="aoi-select" aria-label="Select forecast region"><option value="wlc">Western Louisiana Coast (WLC)</option><option value="umap">Upper Mississippi Alluvial Plain (UMAP)</option></select>
+                </section>
+                <section class="control-section">
+                    <h2><label for="retro-date">📅 Retrospective forecast data</label></h2>
+                    <div class="retro-date-navigation">
+                        <button id="retro-prev" class="timeline-arrow" aria-label="Previous retrospective date" title="Previous available date" disabled>&#9664;</button>
+                        <input id="retro-date" type="date">
+                        <button id="retro-next" class="timeline-arrow" aria-label="Next retrospective date" title="Next available date" disabled>&#9654;</button>
+                    </div>
                     <p id="retro-available" class="button-help"></p>
                     <p id="retro-window" class="retro-window"></p>
                 </section>
@@ -131,7 +137,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="colormap.js"></script>
-    <script src="app.js?v=retro-targets-1"></script>
-    <script src="retrospective.js?v=retro-targets-1"></script>
+    <script src="app.js?v=retro-navigation-1"></script>
+    <script src="retrospective.js?v=retro-navigation-1"></script>
 </body>
 </html>

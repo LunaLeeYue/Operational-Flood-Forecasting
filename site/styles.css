@@ -235,3 +235,11 @@ button:focus-visible, input:focus-visible { outline: 2px solid #667eea; outline-
 @media(max-width:760px) { #retro-map-shell { min-height: 400px; } }
 #curtain-slider:focus-visible { outline: none; }
 #curtain-slider:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px #283b9e, 0 2px 8px #0005; }
+
+#header h1 { display: flex; align-items: center; gap: 10px; }
+.app-icon { width: 36px; height: 36px; flex: 0 0 36px; object-fit: contain; }
+.retro-date-navigation { display: flex; align-items: center; gap: 8px; }
+.retro-date-navigation #retro-date { flex: 1; min-width: 0; width: auto; margin: 0; }
+.retro-date-navigation .timeline-arrow { flex-shrink: 0; }
+
+#retro-sidebar h2 label { font: inherit; color: inherit; margin: 0; }

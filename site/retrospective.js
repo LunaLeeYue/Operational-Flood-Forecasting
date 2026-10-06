@@ -82,7 +82,18 @@
             clear(); retro.asset=null; retro.hasObservation=false; updateView(); status(error.message, 'warning');
         }
     }
+    function updateDateNavigation() {
+        const chosen=el('retro-date').value;
+        el('retro-prev').disabled=!retro.runs.some(target=>target.date<chosen);
+        el('retro-next').disabled=!retro.runs.some(target=>target.date>chosen);
+    }
+    function stepDate(direction) {
+        const chosen=el('retro-date').value;
+        const target=direction<0 ? retro.runs.filter(item=>item.date<chosen).at(-1) : retro.runs.find(item=>item.date>chosen);
+        if (target) {el('retro-date').value=target.date; selectDate();}
+    }
     async function selectDate() {
+        updateDateNavigation();
         ++retro.request; clear(); retro.metadata=null; retro.asset=null; retro.hasObservation=false;
         el('retro-leads').replaceChildren(); el('retro-window').textContent=''; el('retro-provenance').textContent=''; updateView();
         retro.needsFit=true;
@@ -106,14 +117,14 @@
             ++retro.request; clear(); retro.metadata=null; retro.asset=null; retro.hasObservation=false;
             el('retro-leads').replaceChildren(); el('retro-window').textContent='';
             el('retro-available').textContent='No archived dates yet.';
-            el('retro-date').disabled=true; updateView();
+            el('retro-date').disabled=true; updateDateNavigation(); updateView();
             status('No precomputed dates yet for this region.','info'); return;
         }
         el('retro-date').disabled=false;
         el('retro-date').min=retro.runs[0].date;
         el('retro-date').max=retro.runs.at(-1).date;
         if (!retro.runs.some(run=>run.date===el('retro-date').value)) el('retro-date').value=retro.runs.at(-1).date;
-        el('retro-available').textContent=`Available: ${retro.runs[0].date} – ${retro.runs.at(-1).date} (${retro.runs.length} target dates).`;
+        el('retro-available').textContent='Historical forecasts are available from September 2026.';
         await selectDate();
     }
     async function initRetro() {
@@ -153,6 +164,8 @@
     el('nrt-mode').addEventListener('click',()=>switchMode(false));
     el('retro-mode').addEventListener('click',()=>switchMode(true));
     el('retro-region').addEventListener('change',selectRegion);
+    el('retro-prev').addEventListener('click',()=>stepDate(-1));
+    el('retro-next').addEventListener('click',()=>stepDate(1));
     el('retro-date').addEventListener('change',selectDate);
     el('curtain-slider').addEventListener('input',clipLayers);
     el('curtain-mode').addEventListener('click',()=>{retro.view='curtain';updateView();});
