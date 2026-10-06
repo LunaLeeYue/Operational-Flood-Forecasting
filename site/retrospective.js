@@ -119,7 +119,8 @@
         try {
             const response=await fetch('validation/catalog.json');
             if(!response.ok)throw new Error('Retrospective catalog unavailable.');
-            retro.runs=(await response.json()).runs;
+            const available=(await response.json()).runs;
+            retro.runs=available.filter((run,index)=>available.findIndex(other=>other.date===run.date)===index);
             if(!retro.runs.length)throw new Error('No precomputed dates yet.');
             el('retro-date').min=retro.runs[0].date;
             el('retro-date').max=retro.runs.at(-1).date;
