@@ -647,6 +647,20 @@
       "metadata": "validation/wlc/runs/20261006T044252336761_0000/metadata.json",
       "provenance": "operational_archive",
       "generated_at": "2026-10-06T04:42:52.336761+00:00"
+    },
+    {
+      "region_id": "umap",
+      "date": "2026-10-06",
+      "metadata": "validation/umap/runs/20261006T131705855327_0000/metadata.json",
+      "provenance": "operational_archive",
+      "generated_at": "2026-10-06T13:17:05.855327+00:00"
+    },
+    {
+      "region_id": "wlc",
+      "date": "2026-10-06",
+      "metadata": "validation/wlc/runs/20261006T131726924294_0000/metadata.json",
+      "provenance": "operational_archive",
+      "generated_at": "2026-10-06T13:17:26.924294+00:00"
     }
   ],
   "targets": [
