@@ -1,29 +1,64 @@
 {
-  "region": "wlc",
+  "regions": [
+    "umap",
+    "wlc"
+  ],
   "runs": [
     {
+      "region_id": "wlc",
       "date": "2026-10-01",
       "metadata": "validation/wlc/2026-10-01/metadata.json",
       "provenance": "retrospective_reconstruction",
       "generated_at": "2026-10-06T00:09:11.018899+00:00"
     },
     {
+      "region_id": "umap",
+      "date": "2026-10-01",
+      "metadata": "validation/umap/2026-10-01/metadata.json",
+      "provenance": "retrospective_reconstruction",
+      "generated_at": "2026-10-06T00:26:06.932812+00:00"
+    },
+    {
+      "region_id": "wlc",
       "date": "2026-10-02",
       "metadata": "validation/wlc/2026-10-02/metadata.json",
       "provenance": "retrospective_reconstruction",
       "generated_at": "2026-10-06T00:09:35.969309+00:00"
     },
     {
+      "region_id": "umap",
+      "date": "2026-10-02",
+      "metadata": "validation/umap/2026-10-02/metadata.json",
+      "provenance": "retrospective_reconstruction",
+      "generated_at": "2026-10-06T00:26:29.642760+00:00"
+    },
+    {
+      "region_id": "wlc",
       "date": "2026-10-05",
       "metadata": "validation/wlc/runs/20261006T001717166763_0000/metadata.json",
       "provenance": "operational_archive",
       "generated_at": "2026-10-06T00:17:17.166763+00:00"
     },
     {
+      "region_id": "wlc",
       "date": "2026-10-05",
       "metadata": "validation/wlc/runs/20261006T001920921948_0000/metadata.json",
       "provenance": "operational_archive",
       "generated_at": "2026-10-06T00:19:20.921948+00:00"
+    },
+    {
+      "region_id": "umap",
+      "date": "2026-10-05",
+      "metadata": "validation/umap/runs/20261006T002937537280_0000/metadata.json",
+      "provenance": "operational_archive",
+      "generated_at": "2026-10-06T00:29:37.537280+00:00"
+    },
+    {
+      "region_id": "wlc",
+      "date": "2026-10-05",
+      "metadata": "validation/wlc/runs/20261006T002956915467_0000/metadata.json",
+      "provenance": "operational_archive",
+      "generated_at": "2026-10-06T00:29:56.915467+00:00"
     }
   ]
 }
