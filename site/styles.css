@@ -213,3 +213,25 @@ button:focus-visible, input:focus-visible { outline: 2px solid #667eea; outline-
 .validation-note { color: #6b542a; background: #fff5da; border-radius: 6px; padding: 9px; font-size: 12px; line-height: 1.5; }
 .validation-panel a { display: inline-block; margin-top: 10px; font-size: 11px; color: #4657b0; }
 .view-badge { max-width: min(330px, 55vw); padding: 7px 10px; border-radius: 6px; background: rgba(255,255,255,.92); color: #34405e; font-size: 11px; box-shadow: 0 2px 7px #0002; }
+.mode-switch { display: flex; gap: 4px; background: #edf0fb; padding: 4px; border-radius: 9px; margin-bottom: 20px; }
+.mode-switch button { flex: 1; border: 0; border-radius: 6px; padding: 10px 4px; color: #536080; background: transparent; cursor: pointer; font-weight: 600; }
+.mode-switch button.active { background: #667eea; color: white; box-shadow: 0 2px 5px #667eea33; }
+#retro-date { width: 100%; margin-top: 7px; padding: 10px; border: 1px solid #ccd3e6; border-radius: 6px; font: inherit; color: #34405e; }
+.retro-window { font-size: 12px; line-height: 1.6; padding: 10px; background: #f0f3fc; border-radius: 7px; }
+#retro-map-shell { position: relative; flex: 1; min-width: 0; overflow: hidden; --split: 50%; }
+#retro-map { height: 100%; width: 100%; }
+.retrospective-active #loading { display: none; }
+#curtain-ui { position: absolute; inset: 0; pointer-events: none; z-index: 600; }
+#curtain-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: white; box-shadow: 0 0 4px #0008; }
+#curtain-slider { appearance: none; -webkit-appearance: none; position: absolute; top: calc(50% - 24px); left: -19px; width: calc(100% + 38px); height: 48px; margin: 0; background: transparent; pointer-events: none; }
+#curtain-slider::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 38px; height: 48px; border: 3px solid white; border-radius: 10px; background: #667eea; box-shadow: 0 2px 8px #0005; cursor: ew-resize; pointer-events: auto; }
+#curtain-slider::-moz-range-thumb { width: 32px; height: 42px; border: 3px solid white; border-radius: 10px; background: #667eea; cursor: ew-resize; pointer-events: auto; }
+.comparison-label { position: absolute; top: 12px; background: #fffE; padding: 7px 10px; border-radius: 5px; color: #34405e; font-size: 12px; }
+.comparison-label.left { left: 55px; }.comparison-label.right { right: 60px; }
+.retro-map-label { position: absolute; bottom: 24px; left: 10px; z-index: 600; background: #fffffff0; color: #34405e; padding: 7px; border-radius: 5px; font-size: 11px; max-width: 55%; }
+.retro-legend { width: 150px; padding: 9px; background: #ffffffba; border-radius: 6px; font-size: 10px; }
+.retro-legend div { height: 10px; margin: 5px 0; }.retro-legend span:last-child { float: right; }
+#retro-toggle { margin-top: 10px; width: 100%; }
+@media(max-width:760px) { #retro-map-shell { min-height: 400px; } }
+#curtain-slider:focus-visible { outline: none; }
+#curtain-slider:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px #283b9e, 0 2px 8px #0005; }

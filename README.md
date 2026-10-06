@@ -46,10 +46,14 @@ feed. It must not be used as the sole basis for emergency decisions.
 
 Input rasters are published with each forecast under `site/data/<region>/inputs/` and listed in `input_assets` in regional metadata. Older publications without these assets keep the input controls disabled.
 
-## WLC historical comparison example
+## NRT and retrospective modes
 
-The History & Validation selector includes the forecast run dated 2026-09-29. Its original Actions log confirms an input cutoff of 2026-09-28 and target dates 2026-09-29, 2026-09-30 and 2026-10-01. The original Pages artifact was no longer available, so this example is explicitly labelled a retrospective reconstruction, not a recovered operational forecast. It uses unchanged WLC model weights and archived NOAA inputs; the upstream archive may have been revised since issuance.
+NRT Forecast preserves the original live map, forecast-date buttons, input timeline, opacity and basemap controls. Retrospective is a separate WLC map and calendar; switching back retains the NRT view.
 
-Select a target date and toggle **Show observation instead of forecast** to compare the same date and map extent. Both layers use the same 0–100% water-fraction color scale and opacity. Invalid observation pixels remain transparent. This compares water fraction, including permanent water, rather than isolating new inundation.
+The calendar selects the **first forecast target date D**. Its input is exactly the nine dates D-9 through D-1, and the three targets are D, D+1 and D+2. Curtain shows forecast on the left and same-date observation on the right; drag the divider or use its keyboard controls. Toggle alternates the full layers. Both use the same map extent, opacity and color scale. Missing observations remain pending, and invalid/cloud pixels are transparent.
 
-The six preview images, provenance metadata, and compressed numerical comparison (`comparison.nc`) are stored in `site/validation/wlc/2026-09-29/`, so daily Pages builds retain this example. Rebuild with `python scripts/build_validation_example.py`; it verifies exact dates and coordinate equality and records the model SHA-256. This first example does not yet implement automatic daily historical archiving.
+The 2026-10-01 example uses observations from September 22–30 to predict October 1–3. October 1 and 2 were retrospectively reconstructed because the original operational files were not retained. These entries are explicitly labelled; no claim is made that they are recovered original forecasts.
+
+Each subsequent daily WLC run is saved before Pages deployment to the **forecast-history** branch: immutable forecast PNGs, compressed numerical NetCDF, generation time, model SHA-256, workflow run ID and input dates. Later runs attach matching observations only when coordinates agree; predictions are not recomputed or overwritten. Every run is retained; the calendar defaults to the earliest original operational run per target start date, preferring it over retrospective reconstructions. The index starts at 2026-10-01. Archive persistence is separate from the latest NRT output and survives daily deploys.
+
+To precompute additional complete historical dates, run `python scripts/build_validation_example.py --start-date YYYY-MM-DD --end-date YYYY-MM-DD`, then publish the generated files and catalog. It checks consecutive input dates and matching grids. GitHub Pages serves precomputed assets; selecting a date does not launch model inference in the browser.

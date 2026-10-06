@@ -1,8 +1,6 @@
 "use strict";
 
 const state = {
-    historyRun: "latest",
-    compareObservation: false,
     opacity: 0.75,
     inputIndex: 0,
     showInputs: false,
@@ -184,32 +182,6 @@ legend.onAdd = () => {
 };
 legend.addTo(map);
 
-const runSelect = document.getElementById("forecast-run");
-const comparisonToggle = document.getElementById("compare-observation");
-const viewBadge = L.control({position: "bottomleft"});
-viewBadge.onAdd = () => L.DomUtil.create("div", "view-badge");
-viewBadge.addTo(map);
-function updateValidationControls() {
-    const historical = state.historyRun !== "latest";
-    runSelect.value = state.historyRun;
-    document.getElementById("validation-options").hidden = !historical;
-    comparisonToggle.checked = state.compareObservation;
-    inputToggle.closest("section").hidden = historical;
-    elements.updateButton.disabled = historical;
-}
-runSelect.addEventListener("change", async () => {
-    state.historyRun = runSelect.value;
-    state.compareObservation = false;
-    state.showInputs = false;
-    if (state.historyRun !== "latest") elements.aoiSelect.value = "wlc";
-    updateValidationControls();
-    await selectRegion(elements.aoiSelect.value);
-});
-comparisonToggle.addEventListener("change", () => {
-    state.compareObservation = comparisonToggle.checked;
-    loadForecastLayers();
-});
-
 function updateDateButtons() {
     document.querySelectorAll("#date-selector .date-btn").forEach((button, index) => {
         const asset = state.region?.assets?.[index];
@@ -234,17 +206,12 @@ async function loadForecastLayers() {
     const asset = isInput ? region.input_assets?.[state.inputIndex] : region.assets[state.leadIndex];
     if (!asset) return;
     const request = ++state.layerRequest;
-    const historical = state.historyRun !== "latest";
-    const observation = historical && state.compareObservation;
-    const raster = observation ? asset.observation : asset.raster;
-    const kind = historical ? (observation ? "NOAA observation" : `reconstructed forecast · Day +${asset.lead_day}`) : (isInput ? "input observation" : "forecast");
-    const label = `${asset.date} · ${kind}`;
-    viewBadge.getContainer().textContent = label;
+    const label = `${asset.date} ${isInput ? "input observation" : "forecast"}`;
     showLoading(`Loading ${label}…`);
     clearForecastLayers();
     try {
         {
-            const layer = L.imageOverlay(cacheBusted(raster), region.bounds,
+            const layer = L.imageOverlay(cacheBusted(asset.raster), region.bounds,
                 { opacity: state.opacity, interactive: false });
             state.rasterLayer = layer;
             await new Promise((resolve, reject) => {
@@ -265,11 +232,6 @@ async function loadForecastLayers() {
 }
 
 async function selectRegion(regionId) {
-    if (regionId !== "wlc") {
-        state.historyRun = "latest";
-        state.compareObservation = false;
-    }
-    updateValidationControls();
     const request = ++state.regionRequest;
     ++state.layerRequest;
     state.region = null;
@@ -279,9 +241,8 @@ async function selectRegion(regionId) {
     const catalogRegion = state.catalog.regions[regionId];
     showLoading(`Loading ${catalogRegion.name}…`);
     clearForecastLayers();
-    viewBadge.getContainer().textContent = "Loading…";
     try {
-        const region = await fetchJson(state.historyRun === "latest" ? catalogRegion.latest : "validation/wlc/2026-09-29/metadata.json");
+        const region = await fetchJson(catalogRegion.latest);
         if (request !== state.regionRequest) return;
         state.region = region;
         state.inputIndex = Math.max(0, (region.input_assets?.length || 0) - 1);
@@ -345,3 +306,5 @@ elements.updateButton.addEventListener("click", async () => {
 });
 
 initialize();
+
+window.addEventListener("nrt-visible", () => map.invalidateSize());

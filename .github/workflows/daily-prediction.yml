@@ -29,7 +29,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -40,6 +40,17 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+
+      - name: Restore durable forecast archive
+        uses: actions/checkout@v6
+        with:
+          ref: forecast-history
+          path: history-store
+
+      - name: Restore published history assets
+        run: |
+          mkdir -p site/validation
+          cp -R history-store/wlc site/validation/
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -65,6 +76,19 @@ jobs:
             args+=(--reference-date "$REFERENCE_DATE")
           fi
           python scripts/run_daily.py "${args[@]}"
+
+      - name: Save issued forecasts before deployment
+        run: |
+          cp -R site/validation/wlc history-store/
+          cp site/validation/catalog.json history-store/catalog.json
+          cd history-store
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add wlc catalog.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive issued forecasts for run $GITHUB_RUN_ID"
+            git push origin HEAD:forecast-history
+          fi
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

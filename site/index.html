@@ -6,7 +6,7 @@
     <meta name="description" content="Near-real-time ConvLSTM flood forecasts from NOAA VIIRS data">
     <title>Near-real-time Flood Prediction | ConvLSTM</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=validation-6">
+    <link rel="stylesheet" href="styles.css?v=retro-modes-7">
 </head>
 <body>
     <header id="header">
@@ -20,26 +20,16 @@
 
     <main id="container">
         <aside id="sidebar">
+            <div class="mode-switch" role="group" aria-label="Forecast mode">
+                <button id="nrt-mode" class="active" aria-pressed="true">NRT Forecast</button>
+                <button id="retro-mode" aria-pressed="false">Retrospective</button>
+            </div>
+            <div id="nrt-sidebar">
             <section class="control-section">
                 <h2>📍 Select Region (AOI)</h2>
                 <select id="aoi-select" class="aoi-select" aria-label="Select forecast region">
                     <option>Loading regions…</option>
                 </select>
-            </section>
-
-            <section class="control-section validation-panel">
-                <h2>History &amp; Validation</h2>
-                <label for="forecast-run">Forecast run</label>
-                <select id="forecast-run" class="aoi-select">
-                    <option value="latest">Latest forecast</option>
-                    <option value="2026-09-29">WLC · 2026-09-29 (reconstructed)</option>
-                </select>
-                <div id="validation-options" hidden>
-                    <p class="validation-note">Historical reconstruction — not the original issued forecast. Input cutoff: 2026-09-28.</p>
-                    <label class="input-toggle"><input type="checkbox" id="compare-observation"> Show observation instead of forecast</label>
-                    <p class="button-help">Select a target date below, then toggle to compare the same date and location. Clouds / invalid observations are transparent.</p>
-                    <a href="validation/wlc/2026-09-29/comparison.nc" download>Download comparison data (NetCDF)</a>
-                </div>
             </section>
 
             <section class="control-section">
@@ -93,9 +83,44 @@
             </section>
 
 
+            </div>
+            <div id="retro-sidebar" hidden>
+                <section class="control-section">
+                    <h2>Retrospective Forecast</h2>
+                    <p class="button-help">Western Louisiana Coast (WLC)</p>
+                    <label for="retro-date">Forecast start date</label>
+                    <input id="retro-date" type="date" value="2026-10-01">
+                    <p id="retro-available" class="button-help"></p>
+                    <p id="retro-window" class="retro-window"></p>
+                </section>
+                <section class="control-section">
+                    <h2>Comparison date</h2>
+                    <div id="retro-leads" class="button-row"></div>
+                </section>
+                <section class="control-section">
+                    <h2>Compare layers</h2>
+                    <div class="button-row">
+                        <button id="curtain-mode" class="date-btn active" aria-pressed="true">Curtain</button>
+                        <button id="toggle-mode" class="date-btn" aria-pressed="false">Toggle</button>
+                    </div>
+                    <button id="retro-toggle" class="date-btn" hidden>Show observation</button>
+                    <p class="button-help">Drag the divider to compare forecast (left) and NOAA observation (right).</p>
+                </section>
+                <div id="retro-status" class="status info" role="status">Loading retrospective catalog…</div>
+                <p id="retro-provenance" class="button-help"></p><p class="button-help">Clouds and invalid observations are transparent.</p>
+            </div>
         </aside>
 
         <div id="map" aria-label="Flood forecast map"></div>
+        <div id="retro-map-shell" hidden>
+            <div id="retro-map" aria-label="Retrospective comparison map"></div>
+            <div id="curtain-ui" hidden>
+                <div class="comparison-label left">Forecast</div><div class="comparison-label right">Observation</div>
+                <div id="curtain-line"></div>
+                <input id="curtain-slider" type="range" min="0" max="100" value="50" aria-label="Forecast observation divider">
+            </div>
+            <div id="retro-map-label" class="retro-map-label"></div>
+        </div>
         <div id="loading" class="loading show" aria-live="polite">
             <div class="spinner"></div>
             <p><strong>Loading…</strong></p>
@@ -105,6 +130,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="colormap.js"></script>
-    <script src="app.js?v=validation-6"></script>
+    <script src="app.js?v=retro-modes-7"></script>
+    <script src="retrospective.js?v=retro-modes-7"></script>
 </body>
 </html>

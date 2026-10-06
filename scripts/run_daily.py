@@ -14,6 +14,7 @@ import xarray as xr
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
+from flood_app.archive import archive_run
 from flood_app.config import load_config  # noqa: E402
 from flood_app.data import NoaaVfmClient, align_mask, preprocess  # noqa: E402
 from flood_app.models import load_model, predict  # noqa: E402
@@ -127,6 +128,9 @@ def main() -> int:
                 args.output.resolve(),
                 processed=processed,
             )
+            if region_id == "wlc":
+                archive_run(results[region_id], predictions, processed, mask,
+                            region["model_path"], args.output.resolve())
             print(
                 f"Published {region_id}: observation "
                 f"{results[region_id]['latest_observation_date']} -> "
