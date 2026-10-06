@@ -41,11 +41,9 @@
         const asset = retro.asset;
         const metrics = asset?.metrics;
         el('retro-metrics').hidden = !asset;
-        el('retro-mae').textContent = Number.isFinite(metrics?.mae) ? metrics.mae.toFixed(2) : '—';
-        el('retro-rmse').textContent = Number.isFinite(metrics?.rmse) ? metrics.rmse.toFixed(2) : '—';
-        el('retro-metrics-note').textContent = metrics
-            ? (metrics.valid_pixels ? `Percentage points · ${metrics.valid_pixels.toLocaleString()} valid paired pixels` : 'No valid paired pixels')
-            : 'Verification metrics unavailable';
+        el('retro-mae').textContent = Number.isFinite(metrics?.mae) ? `${metrics.mae.toFixed(2)}%` : '—';
+        el('retro-rmse').textContent = Number.isFinite(metrics?.rmse) ? `${metrics.rmse.toFixed(2)}%` : '—';
+        el('retro-metrics-note').textContent = `Valid pixel number: ${metrics ? metrics.valid_pixels.toLocaleString() : '—'}`;
         el('retro-metrics').title = 'Equal-weight pixel errors across the full AOI, including dry pixels. Cloud, invalid and outside-AOI pixels are excluded. Values do not depend on map zoom, opacity or divider position.';
         el('retro-map-label').textContent = !retro.hasObservation && asset ? `${asset.date} · Forecast (observation pending)` : asset ? `${asset.date} · ${asset.lead_day}-day lead · ${retro.view === 'curtain' ? 'Forecast | Observation' : (retro.observation ? 'NOAA observation' : 'Retrospective forecast')}` : '';
         clipLayers();
