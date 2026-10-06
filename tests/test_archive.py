@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import xarray as xr
 from flood_app.publish import publish_region
-from flood_app.archive import archive_run
+from flood_app.archive import archive_run, update_catalog
 
 class ArchiveTests(unittest.TestCase):
     def test_original_predictions_survive_and_later_observations_attach(self):
@@ -34,3 +34,31 @@ class ArchiveTests(unittest.TestCase):
             self.assertEqual(len(catalog['runs']),4)
             self.assertEqual(catalog['runs'][0]['provenance'],'operational_archive')
             self.assertEqual({run['region_id'] for run in catalog['runs']},{'wlc','umap'})
+
+    def test_target_calendar_matches_leads_and_prefers_original_runs(self):
+        from datetime import date, timedelta
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp)
+            for region in ['umap','wlc']:
+                for lead in [1,2,3]:
+                    for version, provenance in [('reconstructed','retrospective_reconstruction'),('original','operational_archive')]:
+                        path=root/region/f'{version}-{lead}'/'metadata.json'
+                        path.parent.mkdir(parents=True)
+                        target=date(2026,9,1)
+                        cutoff=target-timedelta(days=lead)
+                        meta={'region_id':region,'latest_observation_date':str(cutoff),'provenance':provenance,'generated_at':'2026-10-05T00:00:00Z',
+                              'assets':[{'date':str(cutoff+timedelta(days=i)), 'lead_day':i, **({'observation':'matched.png'} if i==lead else {})} for i in [1,2,3]]}
+                        path.write_text(json.dumps(meta))
+            update_catalog(root)
+            catalog=json.loads((root/'catalog.json').read_text())
+            self.assertEqual(len(catalog['targets']),2)
+            for target in catalog['targets']:
+                self.assertEqual(target['date'],'2026-09-01')
+                self.assertEqual(set(target['leads']),{'1','2','3'})
+                for lead, entry in target['leads'].items():
+                    self.assertEqual(entry['provenance'],'operational_archive')
+                    self.assertIn(f"/{target['region_id']}/original-{lead}/",entry['metadata'])
+            path=root/'umap/original-3/metadata.json'
+            meta=json.loads(path.read_text()); meta['latest_observation_date']='2026-08-31'
+            path.write_text(json.dumps(meta))
+            with self.assertRaisesRegex(ValueError,'Invalid lead alignment'): update_catalog(root)

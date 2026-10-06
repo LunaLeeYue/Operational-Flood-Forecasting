@@ -1,0 +1,54 @@
+{
+  "region_id": "umap",
+  "region_name": "Upper Mississippi Alluvial Plain (UMAP)",
+  "issue_date": "2026-09-04",
+  "provenance": "retrospective_reconstruction",
+  "generated_at": "2026-10-06T00:39:05.940885+00:00",
+  "latest_observation_date": "2026-09-03",
+  "input_dates": [
+    "2026-08-28",
+    "2026-08-29",
+    "2026-08-30",
+    "2026-08-31",
+    "2026-09-01",
+    "2026-09-02",
+    "2026-09-03"
+  ],
+  "bounds": [
+    [
+      35.20265332430648,
+      -90.45487699686663
+    ],
+    [
+      37.5225894843055,
+      -88.65422887268134
+    ]
+  ],
+  "assets": [
+    {
+      "date": "2026-09-04",
+      "lead_day": 1,
+      "raster": "validation/umap/2026-09-04/forecast-2026-09-04.png",
+      "observation": "validation/umap/2026-09-04/observation-2026-09-04.png"
+    },
+    {
+      "date": "2026-09-05",
+      "lead_day": 2,
+      "raster": "validation/umap/2026-09-04/forecast-2026-09-05.png",
+      "observation": "validation/umap/2026-09-04/observation-2026-09-05.png"
+    },
+    {
+      "date": "2026-09-06",
+      "lead_day": 3,
+      "raster": "validation/umap/2026-09-04/forecast-2026-09-06.png",
+      "observation": "validation/umap/2026-09-04/observation-2026-09-06.png"
+    }
+  ],
+  "input_assets": [],
+  "model": {
+    "history_days": 7,
+    "forecast_days": 3
+  },
+  "model_sha256": "24cafaee146cb2c129991aed861b96f0046e8d4744228e7516143146fae45cfe",
+  "note": "Reconstructed using archived NOAA inputs strictly before the forecast start date, not an original issued forecast. Upstream archives may have been revised."
+}

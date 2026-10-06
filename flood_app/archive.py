@@ -1,5 +1,6 @@
 """Persist issued regional forecasts and attach observations without rewriting predictions."""
 from pathlib import Path
+from datetime import date
 import hashlib
 import json
 import os
@@ -8,22 +9,39 @@ import numpy as np
 import xarray as xr
 from flood_app.publish import save_forecast_png
 
-START_DATE = '2026-10-01'
+START_DATE = '2026-09-01'
 
 
 def update_catalog(validation_root: Path) -> None:
     entries = []
+    candidates = []
     for path in sorted(validation_root.rglob('metadata.json')):
         meta = json.loads(path.read_text(encoding='utf-8'))
-        start = meta['assets'][0]['date']
-        if start < START_DATE:
+        if not any(asset['date'] >= START_DATE for asset in meta['assets']):
             continue
-        entries.append({'region_id': meta['region_id'], 'date': start, 'metadata': 'validation/' + path.relative_to(validation_root).as_posix(),
-                        'provenance': meta['provenance'], 'generated_at': meta['generated_at']})
-    # Calendar defaults to the earliest genuinely issued run; retain all runs in the index.
+        entry = {'region_id': meta['region_id'], 'date': meta['assets'][0]['date'],
+                 'metadata': 'validation/' + path.relative_to(validation_root).as_posix(),
+                 'provenance': meta['provenance'], 'generated_at': meta['generated_at']}
+        entries.append(entry)
+        for asset in meta['assets']:
+            if asset['date'] < START_DATE or not asset.get('observation'):
+                continue
+            # Lead is measured from the final input date, never the reconstruction timestamp.
+            actual_lead = (date.fromisoformat(asset['date']) - date.fromisoformat(meta['latest_observation_date'])).days
+            if actual_lead != asset['lead_day'] or actual_lead not in (1, 2, 3):
+                raise ValueError(f'Invalid lead alignment: {path} {asset}')
+            candidates.append({**entry, 'date': asset['date'], 'lead_day': actual_lead})
     entries.sort(key=lambda e: (e['date'], e['provenance'] != 'operational_archive', e['generated_at']))
+    candidates.sort(key=lambda e: (e['provenance'] != 'operational_archive', e['generated_at']))
+    targets = {}
+    for candidate in candidates:
+        key = (candidate['region_id'], candidate['date'])
+        target = targets.setdefault(key, {'region_id': key[0], 'date': key[1], 'leads': {}})
+        target['leads'].setdefault(str(candidate['lead_day']), candidate)
     validation_root.mkdir(parents=True, exist_ok=True)
-    (validation_root / 'catalog.json').write_text(json.dumps({'regions': ['umap', 'wlc'], 'runs': entries}, indent=2), encoding='utf-8')
+    catalog = {'regions': ['umap', 'wlc'], 'runs': entries,
+               'targets': [targets[key] for key in sorted(targets)]}
+    (validation_root / 'catalog.json').write_text(json.dumps(catalog, indent=2), encoding='utf-8')
 
 
 def archive_run(metadata, predictions, processed, mask, model_path, data_root: Path) -> None:
@@ -65,10 +83,15 @@ def archive_run(metadata, predictions, processed, mask, model_path, data_root: P
             encoding={'observation': {'zlib': True, 'complevel': 4}})
         save_forecast_png(frame.values, obs_dir / f'{day}.png')
 
-    for path in (validation_root / region_id / 'runs').glob('*/metadata.json'):
+    for path in (validation_root / region_id).rglob('metadata.json'):
         record = json.loads(path.read_text(encoding='utf-8'))
-        with xr.open_dataset(path.parent / 'forecast.nc') as prediction:
+        numerical_path = path.parent / 'forecast.nc'
+        if not numerical_path.exists():
+            numerical_path = path.parent / 'comparison.nc'
+        with xr.open_dataset(numerical_path) as prediction:
             for asset in record['assets']:
+                if asset.get('observation'):
+                    continue
                 observed_path = obs_dir / f"{asset['date']}.nc"
                 if not observed_path.exists():
                     continue

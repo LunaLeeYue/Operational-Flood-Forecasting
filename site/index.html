@@ -6,7 +6,7 @@
     <meta name="description" content="Near-real-time ConvLSTM flood forecasts from NOAA VIIRS data">
     <title>Near-real-time Flood Prediction | ConvLSTM</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=retro-modes-8">
+    <link rel="stylesheet" href="styles.css?v=retro-targets-1">
 </head>
 <body>
     <header id="header">
@@ -89,13 +89,13 @@
                     <h2>Retrospective Forecast</h2>
                     <label for="retro-region">Region</label>
                     <select id="retro-region" class="aoi-select"><option value="wlc">Western Louisiana Coast (WLC)</option><option value="umap">Upper Mississippi Alluvial Plain (UMAP)</option></select>
-                    <label for="retro-date">Forecast start date</label>
-                    <input id="retro-date" type="date" value="2026-10-01">
+                    <label for="retro-date">Target observation date</label>
+                    <input id="retro-date" type="date">
                     <p id="retro-available" class="button-help"></p>
                     <p id="retro-window" class="retro-window"></p>
                 </section>
                 <section class="control-section">
-                    <h2>Comparison date</h2>
+                    <h2>Forecast lead time</h2>
                     <div id="retro-leads" class="button-row"></div>
                 </section>
                 <section class="control-section">
@@ -131,7 +131,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="colormap.js"></script>
-    <script src="app.js?v=retro-modes-8"></script>
-    <script src="retrospective.js?v=retro-modes-8"></script>
+    <script src="app.js?v=retro-targets-1"></script>
+    <script src="retrospective.js?v=retro-targets-1"></script>
 </body>
 </html>

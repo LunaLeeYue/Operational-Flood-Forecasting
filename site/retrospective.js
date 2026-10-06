@@ -1,7 +1,7 @@
 "use strict";
 (() => {
     const el = id => document.getElementById(id);
-    const retro = {map: null, runs: [], allRuns: [], metadata: null, lead: 0, view: 'curtain', hasObservation: false, observation: false, layers: [], request: 0, active: false};
+    const retro = {map: null, runs: [], allRuns: [], metadata: null, lead: 1, asset: null, target: null, view: 'curtain', hasObservation: false, observation: false, layers: [], request: 0, active: false};
     function clipLayers() {
         if (retro.layers.length !== 2) return;
         const split = Number(el('curtain-slider').value);
@@ -38,21 +38,33 @@
         el('toggle-mode').disabled = !retro.hasObservation;
         el('retro-toggle').textContent = retro.observation ? 'Show forecast' : 'Show observation';
         el('curtain-ui').hidden = retro.view !== 'curtain' || retro.layers.length !== 2;
-        const asset = retro.metadata?.assets[retro.lead];
-        el('retro-map-label').textContent = !retro.hasObservation && asset ? `${asset.date} · Forecast (observation pending)` : asset ? `${asset.date} · Day +${asset.lead_day} · ${retro.view === 'curtain' ? 'Forecast | Observation' : (retro.observation ? 'NOAA observation' : 'Retrospective forecast')}` : '';
+        const asset = retro.asset;
+        el('retro-map-label').textContent = !retro.hasObservation && asset ? `${asset.date} · Forecast (observation pending)` : asset ? `${asset.date} · ${asset.lead_day}-day lead · ${retro.view === 'curtain' ? 'Forecast | Observation' : (retro.observation ? 'NOAA observation' : 'Retrospective forecast')}` : '';
         clipLayers();
     }
     async function showLead() {
-        if (!retro.metadata) return;
         const request = ++retro.request;
-        clear();
-        const asset = retro.metadata.assets[retro.lead];
-        el('retro-leads').querySelectorAll('button').forEach((button, i) => button.classList.toggle('active', i === retro.lead));
-        status(`Loading comparison for ${asset.date}…`);
+        clear(); retro.metadata=null; retro.asset=null; retro.hasObservation=false;
+        el('retro-window').textContent=''; el('retro-provenance').textContent=''; updateView();
+        el('retro-leads').querySelectorAll('button').forEach(button => button.classList.toggle('active', Number(button.dataset.lead) === retro.lead));
+        const entry = retro.target?.leads[String(retro.lead)];
+        if (!entry) {status('This lead time is not available for the selected target date.', 'warning'); return;}
+        status(`Loading ${retro.lead}-day lead forecast for ${retro.target.date}…`);
         try {
-            retro.hasObservation = Boolean(asset.observation);
-            const images = [asset.raster, asset.observation].filter(Boolean).map(url => {
-                const layer = L.imageOverlay(url, retro.metadata.bounds, {opacity: 0.75, interactive: false});
+            const response = await fetch(entry.metadata);
+            if (!response.ok) throw new Error('Could not load this historical forecast.');
+            const metadata = await response.json();
+            if (request !== retro.request) return;
+            const asset = metadata.assets.find(item => item.date === retro.target.date && item.lead_day === retro.lead);
+            if (!asset?.observation) throw new Error('Matched forecast and observation are unavailable.');
+            retro.metadata=metadata; retro.asset=asset; retro.hasObservation=true;
+            el('retro-provenance').textContent=metadata.provenance === 'operational_archive'
+                ? `Original operational forecast saved at ${metadata.generated_at}.`
+                : 'Retrospective reconstruction from archived inputs; original issued output was not retained.';
+            el('retro-window').textContent=`Target: ${asset.date} · ${asset.lead_day}-day lead. ${metadata.model.history_days}-day input: ${metadata.input_dates[0]} – ${metadata.latest_observation_date}.`;
+            if (retro.needsFit) {retro.map.stop(); retro.map.fitBounds(metadata.bounds,{padding:[15,15],animate:false}); retro.needsFit=false;}
+            const images = [asset.raster, asset.observation].map(url => {
+                const layer = L.imageOverlay(url, metadata.bounds, {opacity: 0.75, interactive: false});
                 retro.layers.push(layer);
                 return new Promise((resolve,reject) => {
                     layer.once('load', resolve);
@@ -64,47 +76,34 @@
             await Promise.all(images);
             if (request !== retro.request) return;
             updateView();
-            status(retro.hasObservation ? `Comparing ${asset.date} using the same grid and 0–100% water-fraction scale.` : `Forecast for ${asset.date}. Observation not yet available.`, retro.hasObservation ? 'success' : 'info');
+            status(`Comparing ${asset.date}: ${asset.lead_day}-day lead forecast and same-day NOAA observation.`, 'success');
         } catch (error) {
             if (request !== retro.request) return;
-            clear(); status(error.message, 'warning');
+            clear(); retro.asset=null; retro.hasObservation=false; updateView(); status(error.message, 'warning');
         }
     }
     async function selectDate() {
-        const request = ++retro.request;
-        clear(); retro.metadata = null;
-        el('retro-leads').replaceChildren(); el('retro-map-label').textContent = '';
-        const chosen = el('retro-date').value;
-        const entry = retro.runs.find(run => run.date === chosen);
-        if (!entry) {
-            el('retro-window').textContent = '';
-            status('This date has not been precomputed. Choose a date in the available range.', 'warning'); return;
-        }
-        status('Loading retrospective forecast…');
-        try {
-            const response = await fetch(entry.metadata);
-            if (!response.ok) throw new Error('Could not load this retrospective forecast.');
-            const metadata = await response.json();
-            if (request !== retro.request) return;
-            retro.metadata = metadata; retro.lead = 0;
-            el('retro-provenance').textContent = metadata.provenance === 'operational_archive' ? `Original operational forecast saved at ${metadata.generated_at}.` : 'Retrospective reconstruction from archived inputs; original issued output was not retained.';
-            el('retro-window').textContent = `${metadata.model.history_days}-day input: ${metadata.input_dates[0]} – ${metadata.latest_observation_date}. Forecast: ${metadata.assets[0].date} – ${metadata.assets[2].date}.`;
-            metadata.assets.forEach((asset,i) => {
-                const button = document.createElement('button'); button.className = 'date-btn';
-                button.textContent = asset.date; button.addEventListener('click', () => {retro.lead=i; showLead();});
-                el('retro-leads').appendChild(button);
-            });
-            retro.map.stop();
-            retro.map.fitBounds(metadata.bounds,{padding:[15,15],animate:false});
-            await showLead();
-        } catch (error) {if(request === retro.request) status(error.message,'warning');}
+        ++retro.request; clear(); retro.metadata=null; retro.asset=null; retro.hasObservation=false;
+        el('retro-leads').replaceChildren(); el('retro-window').textContent=''; el('retro-provenance').textContent=''; updateView();
+        retro.needsFit=true;
+        retro.target=retro.runs.find(target => target.date === el('retro-date').value);
+        if (!retro.target) {status('No observed comparison is available for this target date.', 'warning'); return;}
+        if (!retro.target.leads[String(retro.lead)]) retro.lead=Number(Object.keys(retro.target.leads)[0]);
+        [1,2,3].forEach(lead => {
+            const button=document.createElement('button'); button.className='date-btn';
+            button.textContent=`${lead}-day`; button.dataset.lead=lead;
+            button.disabled=!retro.target.leads[String(lead)];
+            button.addEventListener('click',()=>{retro.lead=lead;showLead();});
+            el('retro-leads').appendChild(button);
+        });
+        await showLead();
     }
     async function selectRegion() {
         const available=retro.allRuns.filter(run=>(run.region_id || 'wlc')===el('retro-region').value);
-        retro.runs=available.filter((run,index)=>available.findIndex(other=>other.date===run.date)===index);
+        retro.runs=available.sort((a,b)=>a.date.localeCompare(b.date));
         el('retro-provenance').textContent='';
         if (!retro.runs.length) {
-            ++retro.request; clear(); retro.metadata=null; retro.hasObservation=false;
+            ++retro.request; clear(); retro.metadata=null; retro.asset=null; retro.hasObservation=false;
             el('retro-leads').replaceChildren(); el('retro-window').textContent='';
             el('retro-available').textContent='No archived dates yet.';
             el('retro-date').disabled=true; updateView();
@@ -113,8 +112,8 @@
         el('retro-date').disabled=false;
         el('retro-date').min=retro.runs[0].date;
         el('retro-date').max=retro.runs.at(-1).date;
-        if (!retro.runs.some(run=>run.date===el('retro-date').value)) el('retro-date').value=retro.runs[0].date;
-        el('retro-available').textContent=`Available: ${retro.runs[0].date} – ${retro.runs.at(-1).date} (${retro.runs.length} start dates).`;
+        if (!retro.runs.some(run=>run.date===el('retro-date').value)) el('retro-date').value=retro.runs.at(-1).date;
+        el('retro-available').textContent=`Available: ${retro.runs[0].date} – ${retro.runs.at(-1).date} (${retro.runs.length} target dates).`;
         await selectDate();
     }
     async function initRetro() {
@@ -138,7 +137,7 @@
         try {
             const response=await fetch('validation/catalog.json');
             if(!response.ok)throw new Error('Retrospective catalog unavailable.');
-            retro.allRuns=(await response.json()).runs;
+            retro.allRuns=(await response.json()).targets || [];
             await selectRegion();
         }catch(error){status(error.message,'warning');}
     }
