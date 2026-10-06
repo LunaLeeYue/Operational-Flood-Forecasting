@@ -50,7 +50,11 @@ jobs:
       - name: Restore published history assets
         run: |
           mkdir -p site/validation
-          cp -R history-store/wlc site/validation/
+          for region in umap wlc; do
+            if [ -d "history-store/$region" ]; then
+              cp -R "history-store/$region" site/validation/
+            fi
+          done
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -79,12 +83,12 @@ jobs:
 
       - name: Save issued forecasts before deployment
         run: |
-          cp -R site/validation/wlc history-store/
+          cp -R site/validation/umap site/validation/wlc history-store/
           cp site/validation/catalog.json history-store/catalog.json
           cd history-store
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add wlc catalog.json
+          git add umap wlc catalog.json
           if ! git diff --cached --quiet; then
             git commit -m "Archive issued forecasts for run $GITHUB_RUN_ID"
             git push origin HEAD:forecast-history

@@ -1,7 +1,7 @@
 "use strict";
 (() => {
     const el = id => document.getElementById(id);
-    const retro = {map: null, runs: [], metadata: null, lead: 0, view: 'curtain', hasObservation: false, observation: false, layers: [], request: 0, active: false};
+    const retro = {map: null, runs: [], allRuns: [], metadata: null, lead: 0, view: 'curtain', hasObservation: false, observation: false, layers: [], request: 0, active: false};
     function clipLayers() {
         if (retro.layers.length !== 2) return;
         const split = Number(el('curtain-slider').value);
@@ -88,15 +88,34 @@
             if (request !== retro.request) return;
             retro.metadata = metadata; retro.lead = 0;
             el('retro-provenance').textContent = metadata.provenance === 'operational_archive' ? `Original operational forecast saved at ${metadata.generated_at}.` : 'Retrospective reconstruction from archived inputs; original issued output was not retained.';
-            el('retro-window').textContent = `9-day input: ${metadata.input_dates[0]} – ${metadata.latest_observation_date}. Forecast: ${metadata.assets[0].date} – ${metadata.assets[2].date}.`;
+            el('retro-window').textContent = `${metadata.model.history_days}-day input: ${metadata.input_dates[0]} – ${metadata.latest_observation_date}. Forecast: ${metadata.assets[0].date} – ${metadata.assets[2].date}.`;
             metadata.assets.forEach((asset,i) => {
                 const button = document.createElement('button'); button.className = 'date-btn';
                 button.textContent = asset.date; button.addEventListener('click', () => {retro.lead=i; showLead();});
                 el('retro-leads').appendChild(button);
             });
-            retro.map.fitBounds(metadata.bounds,{padding:[15,15]});
+            retro.map.stop();
+            retro.map.fitBounds(metadata.bounds,{padding:[15,15],animate:false});
             await showLead();
         } catch (error) {if(request === retro.request) status(error.message,'warning');}
+    }
+    async function selectRegion() {
+        const available=retro.allRuns.filter(run=>(run.region_id || 'wlc')===el('retro-region').value);
+        retro.runs=available.filter((run,index)=>available.findIndex(other=>other.date===run.date)===index);
+        el('retro-provenance').textContent='';
+        if (!retro.runs.length) {
+            ++retro.request; clear(); retro.metadata=null; retro.hasObservation=false;
+            el('retro-leads').replaceChildren(); el('retro-window').textContent='';
+            el('retro-available').textContent='No archived dates yet.';
+            el('retro-date').disabled=true; updateView();
+            status('No precomputed dates yet for this region.','info'); return;
+        }
+        el('retro-date').disabled=false;
+        el('retro-date').min=retro.runs[0].date;
+        el('retro-date').max=retro.runs.at(-1).date;
+        if (!retro.runs.some(run=>run.date===el('retro-date').value)) el('retro-date').value=retro.runs[0].date;
+        el('retro-available').textContent=`Available: ${retro.runs[0].date} – ${retro.runs.at(-1).date} (${retro.runs.length} start dates).`;
+        await selectDate();
     }
     async function initRetro() {
         if (retro.map) {retro.map.invalidateSize(); return;}
@@ -119,13 +138,8 @@
         try {
             const response=await fetch('validation/catalog.json');
             if(!response.ok)throw new Error('Retrospective catalog unavailable.');
-            const available=(await response.json()).runs;
-            retro.runs=available.filter((run,index)=>available.findIndex(other=>other.date===run.date)===index);
-            if(!retro.runs.length)throw new Error('No precomputed dates yet.');
-            el('retro-date').min=retro.runs[0].date;
-            el('retro-date').max=retro.runs.at(-1).date;
-            el('retro-available').textContent=`Available: ${retro.runs[0].date} – ${retro.runs.at(-1).date} (${retro.runs.length} start dates).`;
-            await selectDate();
+            retro.allRuns=(await response.json()).runs;
+            await selectRegion();
         }catch(error){status(error.message,'warning');}
     }
     function switchMode(historical) {
@@ -139,6 +153,7 @@
     }
     el('nrt-mode').addEventListener('click',()=>switchMode(false));
     el('retro-mode').addEventListener('click',()=>switchMode(true));
+    el('retro-region').addEventListener('change',selectRegion);
     el('retro-date').addEventListener('change',selectDate);
     el('curtain-slider').addEventListener('input',clipLayers);
     el('curtain-mode').addEventListener('click',()=>{retro.view='curtain';updateView();});

@@ -1,4 +1,4 @@
-"""Persist issued WLC forecasts and attach observations without rewriting predictions."""
+"""Persist issued regional forecasts and attach observations without rewriting predictions."""
 from pathlib import Path
 import hashlib
 import json
@@ -13,23 +13,24 @@ START_DATE = '2026-10-01'
 
 def update_catalog(validation_root: Path) -> None:
     entries = []
-    for path in sorted((validation_root / 'wlc').rglob('metadata.json')):
+    for path in sorted(validation_root.rglob('metadata.json')):
         meta = json.loads(path.read_text(encoding='utf-8'))
         start = meta['assets'][0]['date']
         if start < START_DATE:
             continue
-        entries.append({'date': start, 'metadata': 'validation/' + path.relative_to(validation_root).as_posix(),
+        entries.append({'region_id': meta['region_id'], 'date': start, 'metadata': 'validation/' + path.relative_to(validation_root).as_posix(),
                         'provenance': meta['provenance'], 'generated_at': meta['generated_at']})
     # Calendar defaults to the earliest genuinely issued run; retain all runs in the index.
     entries.sort(key=lambda e: (e['date'], e['provenance'] != 'operational_archive', e['generated_at']))
     validation_root.mkdir(parents=True, exist_ok=True)
-    (validation_root / 'catalog.json').write_text(json.dumps({'region': 'wlc', 'runs': entries}, indent=2), encoding='utf-8')
+    (validation_root / 'catalog.json').write_text(json.dumps({'regions': ['umap', 'wlc'], 'runs': entries}, indent=2), encoding='utf-8')
 
 
 def archive_run(metadata, predictions, processed, mask, model_path, data_root: Path) -> None:
     validation_root = data_root.parent / 'validation'
+    region_id = metadata['region_id']
     run_id = metadata['generated_at'].replace(':', '').replace('-', '').replace('.', '').replace('+', '_')
-    run_dir = validation_root / 'wlc' / 'runs' / run_id
+    run_dir = validation_root / region_id / 'runs' / run_id
     if run_dir.exists():
         raise FileExistsError(f'Archive run already exists: {run_dir}')
     run_dir.mkdir(parents=True)
@@ -53,7 +54,7 @@ def archive_run(metadata, predictions, processed, mask, model_path, data_root: P
     (run_dir / 'metadata.json').write_text(json.dumps(record, indent=2), encoding='utf-8')
 
     # Retain first available observation and its grid; missing pixels stay missing.
-    obs_dir = validation_root / 'wlc' / 'observations'
+    obs_dir = validation_root / region_id / 'observations'
     obs_dir.mkdir(parents=True, exist_ok=True)
     for index, day in enumerate(metadata['input_dates']):
         if day < START_DATE or (obs_dir / f'{day}.nc').exists():
@@ -64,7 +65,7 @@ def archive_run(metadata, predictions, processed, mask, model_path, data_root: P
             encoding={'observation': {'zlib': True, 'complevel': 4}})
         save_forecast_png(frame.values, obs_dir / f'{day}.png')
 
-    for path in (validation_root / 'wlc' / 'runs').glob('*/metadata.json'):
+    for path in (validation_root / region_id / 'runs').glob('*/metadata.json'):
         record = json.loads(path.read_text(encoding='utf-8'))
         with xr.open_dataset(path.parent / 'forecast.nc') as prediction:
             for asset in record['assets']:
@@ -75,6 +76,6 @@ def archive_run(metadata, predictions, processed, mask, model_path, data_root: P
                     # Do not silently shift or resample an observation onto another grid.
                     if not (np.array_equal(prediction.lat, observed.lat) and np.array_equal(prediction.lon, observed.lon)):
                         continue
-                asset['observation'] = f"validation/wlc/observations/{asset['date']}.png"
+                asset['observation'] = f"validation/{region_id}/observations/{asset['date']}.png"
         path.write_text(json.dumps(record, indent=2), encoding='utf-8')
     update_catalog(validation_root)

@@ -6,7 +6,7 @@
     <meta name="description" content="Near-real-time ConvLSTM flood forecasts from NOAA VIIRS data">
     <title>Near-real-time Flood Prediction | ConvLSTM</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=retro-modes-7">
+    <link rel="stylesheet" href="styles.css?v=retro-modes-8">
 </head>
 <body>
     <header id="header">
@@ -87,7 +87,8 @@
             <div id="retro-sidebar" hidden>
                 <section class="control-section">
                     <h2>Retrospective Forecast</h2>
-                    <p class="button-help">Western Louisiana Coast (WLC)</p>
+                    <label for="retro-region">Region</label>
+                    <select id="retro-region" class="aoi-select"><option value="wlc">Western Louisiana Coast (WLC)</option><option value="umap">Upper Mississippi Alluvial Plain (UMAP)</option></select>
                     <label for="retro-date">Forecast start date</label>
                     <input id="retro-date" type="date" value="2026-10-01">
                     <p id="retro-available" class="button-help"></p>
@@ -130,7 +131,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="colormap.js"></script>
-    <script src="app.js?v=retro-modes-7"></script>
-    <script src="retrospective.js?v=retro-modes-7"></script>
+    <script src="app.js?v=retro-modes-8"></script>
+    <script src="retrospective.js?v=retro-modes-8"></script>
 </body>
 </html>

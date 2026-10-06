@@ -128,8 +128,7 @@ def main() -> int:
                 args.output.resolve(),
                 processed=processed,
             )
-            if region_id == "wlc":
-                archive_run(results[region_id], predictions, processed, mask,
+            archive_run(results[region_id], predictions, processed, mask,
                             region["model_path"], args.output.resolve())
             print(
                 f"Published {region_id}: observation "
