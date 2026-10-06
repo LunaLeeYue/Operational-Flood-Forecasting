@@ -1,0 +1,17 @@
+{
+  "region": "wlc",
+  "runs": [
+    {
+      "date": "2026-10-01",
+      "metadata": "validation/wlc/2026-10-01/metadata.json",
+      "provenance": "retrospective_reconstruction",
+      "generated_at": "2026-10-06T00:09:11.018899+00:00"
+    },
+    {
+      "date": "2026-10-02",
+      "metadata": "validation/wlc/2026-10-02/metadata.json",
+      "provenance": "retrospective_reconstruction",
+      "generated_at": "2026-10-06T00:09:35.969309+00:00"
+    }
+  ]
+}
