@@ -8,6 +8,7 @@ import shutil
 import numpy as np
 import xarray as xr
 from flood_app.publish import save_forecast_png
+from flood_app.verification import refresh_region_metrics
 
 START_DATE = '2026-09-01'
 
@@ -101,4 +102,5 @@ def archive_run(metadata, predictions, processed, mask, model_path, data_root: P
                         continue
                 asset['observation'] = f"validation/{region_id}/observations/{asset['date']}.png"
         path.write_text(json.dumps(record, indent=2), encoding='utf-8')
+    refresh_region_metrics(validation_root, region_id)
     update_catalog(validation_root)

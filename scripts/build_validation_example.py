@@ -10,6 +10,7 @@ sys.path.insert(0,str(ROOT))
 from flood_app.config import load_config
 from flood_app.data import NoaaVfmClient,preprocess,align_mask
 from flood_app.models import load_model,predict
+from flood_app.verification import error_metrics
 from flood_app.publish import save_forecast_png,coordinate_bounds
 
 def build(start, region_id):
@@ -37,7 +38,7 @@ def build(start, region_id):
     for i,d in enumerate(dates):
         f=f'forecast-{d}.png';o=f'observation-{d}.png'
         save_forecast_png(forecast[i],output/f);save_forecast_png(observed[i],output/o)
-        assets.append({'date':d,'lead_day':i+1,'raster':f'validation/{region_id}/{start}/{f}','observation':f'validation/{region_id}/{start}/{o}'})
+        assets.append({'date':d,'lead_day':i+1,'metrics':error_metrics(forecast[i],observed[i]),'raster':f'validation/{region_id}/{start}/{f}','observation':f'validation/{region_id}/{start}/{o}'})
     south,north=coordinate_bounds(raw.lat.values);west,east=coordinate_bounds(raw.lon.values)
     metadata={'region_id':region_id,'region_name':region['name'],'issue_date':start.isoformat(),'provenance':'retrospective_reconstruction','generated_at':datetime.now(timezone.utc).isoformat(),'latest_observation_date':(start-timedelta(days=1)).isoformat(),'input_dates':[str(np.datetime64(v,'D')) for v in raw.time.values],'bounds':[[south,west],[north,east]],'assets':assets,'input_assets':[],'model':{'history_days':region['input_len'],'forecast_days':3},'model_sha256':hashlib.sha256(Path(region['model_path']).read_bytes()).hexdigest(),'note':'Recomputed using archived NOAA inputs and unchanged model weights. Original issued rasters were not retained; this is not a recovered operational forecast. NOAA archives may have been revised.'}
     xr.Dataset({'forecast':(('time','lat','lon'),forecast),'observation':(('time','lat','lon'),observed)},coords={'time':obs.time.values,'lat':raw.lat.values,'lon':raw.lon.values},attrs={'provenance':metadata['note'],'model_sha256':metadata['model_sha256']}).to_netcdf(output/'comparison.nc',engine='netcdf4',encoding={k:{'zlib':True,'complevel':4} for k in ['forecast','observation']})

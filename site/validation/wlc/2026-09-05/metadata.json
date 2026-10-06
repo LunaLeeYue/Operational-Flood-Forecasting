@@ -31,19 +31,37 @@
       "date": "2026-09-05",
       "lead_day": 1,
       "raster": "validation/wlc/2026-09-05/forecast-2026-09-05.png",
-      "observation": "validation/wlc/2026-09-05/observation-2026-09-05.png"
+      "observation": "validation/wlc/2026-09-05/observation-2026-09-05.png",
+      "metrics": {
+        "mae": 5.637528638750715,
+        "rmse": 17.278583515870093,
+        "valid_pixels": 19988,
+        "unit": "percentage_points"
+      }
     },
     {
       "date": "2026-09-06",
       "lead_day": 2,
       "raster": "validation/wlc/2026-09-05/forecast-2026-09-06.png",
-      "observation": "validation/wlc/2026-09-05/observation-2026-09-06.png"
+      "observation": "validation/wlc/2026-09-05/observation-2026-09-06.png",
+      "metrics": {
+        "mae": 4.739957549926899,
+        "rmse": 15.484922059253782,
+        "valid_pixels": 106478,
+        "unit": "percentage_points"
+      }
     },
     {
       "date": "2026-09-07",
       "lead_day": 3,
       "raster": "validation/wlc/2026-09-05/forecast-2026-09-07.png",
-      "observation": "validation/wlc/2026-09-05/observation-2026-09-07.png"
+      "observation": "validation/wlc/2026-09-05/observation-2026-09-07.png",
+      "metrics": {
+        "mae": 5.192341004447874,
+        "rmse": 16.407635377758396,
+        "valid_pixels": 98509,
+        "unit": "percentage_points"
+      }
     }
   ],
   "input_assets": [],

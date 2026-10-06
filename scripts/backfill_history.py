@@ -12,6 +12,7 @@ from flood_app.data import NoaaVfmClient, preprocess, align_mask
 from flood_app.models import load_model, predict
 from flood_app.publish import save_forecast_png, coordinate_bounds
 from flood_app.archive import update_catalog
+from flood_app.verification import refresh_region_metrics
 
 
 def build(region_id, first, last):
@@ -38,6 +39,15 @@ def build(region_id, first, last):
     raw = xr.concat(frames, dim='time', join='exact')
     proc = preprocess(raw)
     mask = align_mask(Path(region['mask_path']), proc)
+    obs_dir = ROOT / 'site/validation' / region_id / 'verification-observations'
+    obs_dir.mkdir(parents=True, exist_ok=True)
+    for target in proc.time.values:
+        day = str(np.datetime64(target, 'D'))
+        frame = proc.sel(time=target, features='water_fraction').copy(deep=True)
+        frame.values[(frame.values < 0) | ~mask] = np.nan
+        path = obs_dir / f'{day}.nc'
+        if not path.exists():
+            frame.to_dataset(name='observation').to_netcdf(path, engine='netcdf4', encoding={'observation': {'zlib':True, 'complevel':4}})
     device = torch.device('cpu')
     torch.set_num_threads(4)
     model = load_model(region, device)
@@ -73,6 +83,7 @@ def build(region_id, first, last):
         (output/'metadata.json').write_text(json.dumps(metadata, indent=2), encoding='utf-8')
         print(f'{region_id} forecast ready {start}', flush=True)
         start += timedelta(days=1)
+    refresh_region_metrics(ROOT/'site/validation', region_id)
     update_catalog(ROOT/'site/validation')
 
 if __name__ == '__main__':

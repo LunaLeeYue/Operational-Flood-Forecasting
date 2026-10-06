@@ -7,7 +7,7 @@
     <title>Near-real-time Flood Forecasting | ConvLSTM</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="icon" type="image/png" href="assets/flood-icon.png">
-    <link rel="stylesheet" href="styles.css?v=retro-navigation-1">
+    <link rel="stylesheet" href="styles.css?v=retro-metrics-1">
 </head>
 <body>
     <header id="header">
@@ -121,6 +121,10 @@
         <div id="map" aria-label="Flood forecast map"></div>
         <div id="retro-map-shell" hidden>
             <div id="retro-map" aria-label="Retrospective comparison map"></div>
+            <div id="retro-metrics" class="retro-metrics" role="status" aria-live="polite" hidden>
+                <div><span>MAE <strong id="retro-mae">—</strong></span><span>RMSE <strong id="retro-rmse">—</strong></span></div>
+                <small id="retro-metrics-note"></small>
+            </div>
             <div id="curtain-ui" hidden>
                 <div class="comparison-label left">Forecast</div><div class="comparison-label right">Observation</div>
                 <div id="curtain-line"></div>
@@ -137,7 +141,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="colormap.js"></script>
-    <script src="app.js?v=retro-navigation-1"></script>
-    <script src="retrospective.js?v=retro-navigation-1"></script>
+    <script src="app.js?v=retro-metrics-1"></script>
+    <script src="retrospective.js?v=retro-metrics-1"></script>
 </body>
 </html>

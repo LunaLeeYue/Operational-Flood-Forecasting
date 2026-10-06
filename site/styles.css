@@ -243,3 +243,9 @@ button:focus-visible, input:focus-visible { outline: 2px solid #667eea; outline-
 .retro-date-navigation .timeline-arrow { flex-shrink: 0; }
 
 #retro-sidebar h2 label { font: inherit; color: inherit; margin: 0; }
+
+.retro-metrics { position: absolute; z-index: 650; top: 12px; left: 50%; transform: translateX(-50%); padding: 9px 15px; border: 1px solid #dde2ef; border-radius: 10px; background: #ffffffed; color: #34405e; box-shadow: 0 2px 8px #27324b15; text-align: center; pointer-events: auto; }
+.retro-metrics > div { display: flex; justify-content: center; gap: 24px; white-space: nowrap; font-size: 12px; }
+.retro-metrics strong { margin-left: 5px; font-size: 19px; font-variant-numeric: tabular-nums; color: #4d5cc0; }
+.retro-metrics small { display: block; margin-top: 3px; font-size: 10px; white-space: nowrap; }
+@media (max-width: 850px) { .retro-metrics { top: 58px; max-width: calc(100% - 24px); } .retro-metrics small { white-space: normal; } }

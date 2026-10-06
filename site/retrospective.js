@@ -39,6 +39,14 @@
         el('retro-toggle').textContent = retro.observation ? 'Show forecast' : 'Show observation';
         el('curtain-ui').hidden = retro.view !== 'curtain' || retro.layers.length !== 2;
         const asset = retro.asset;
+        const metrics = asset?.metrics;
+        el('retro-metrics').hidden = !asset;
+        el('retro-mae').textContent = Number.isFinite(metrics?.mae) ? metrics.mae.toFixed(2) : '—';
+        el('retro-rmse').textContent = Number.isFinite(metrics?.rmse) ? metrics.rmse.toFixed(2) : '—';
+        el('retro-metrics-note').textContent = metrics
+            ? (metrics.valid_pixels ? `Percentage points · ${metrics.valid_pixels.toLocaleString()} valid paired pixels` : 'No valid paired pixels')
+            : 'Verification metrics unavailable';
+        el('retro-metrics').title = 'Equal-weight pixel errors across the full AOI, including dry pixels. Cloud, invalid and outside-AOI pixels are excluded. Values do not depend on map zoom, opacity or divider position.';
         el('retro-map-label').textContent = !retro.hasObservation && asset ? `${asset.date} · Forecast (observation pending)` : asset ? `${asset.date} · ${asset.lead_day}-day lead · ${retro.view === 'curtain' ? 'Forecast | Observation' : (retro.observation ? 'NOAA observation' : 'Retrospective forecast')}` : '';
         clipLayers();
     }
@@ -51,7 +59,7 @@
         if (!entry) {status('This lead time is not available for the selected target date.', 'warning'); return;}
         status(`Loading ${retro.lead}-day lead forecast for ${retro.target.date}…`);
         try {
-            const response = await fetch(entry.metadata);
+            const response = await fetch(entry.metadata, {cache: 'no-cache'});
             if (!response.ok) throw new Error('Could not load this historical forecast.');
             const metadata = await response.json();
             if (request !== retro.request) return;
