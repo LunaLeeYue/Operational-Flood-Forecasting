@@ -7,7 +7,7 @@
     <title>Near-real-time Flood Forecasting | ConvLSTM</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="icon" type="image/png" href="assets/flood-icon.png">
-    <link rel="stylesheet" href="styles.css?v=retro-metrics-2">
+    <link rel="stylesheet" href="styles.css?v=marine-design-1">
 </head>
 <body>
     <header id="header">
@@ -27,14 +27,14 @@
             </div>
             <div id="nrt-sidebar">
             <section class="control-section">
-                <h2>📍 Select Region (AOI)</h2>
+                <h2><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg> Select Region (AOI)</h2>
                 <select id="aoi-select" class="aoi-select" aria-label="Select forecast region">
                     <option>Loading regions…</option>
                 </select>
             </section>
 
             <section class="control-section">
-                <h2>📅 Forecast Date</h2>
+                <h2><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg> Forecast Date</h2>
                 <div id="date-selector" class="button-row">
                     <button class="date-btn active" data-index="0">Day +1</button>
                     <button class="date-btn" data-index="1">Day +2</button>
@@ -66,7 +66,7 @@
             </section>
 
             <section class="control-section">
-                <button id="update-btn" class="update-btn">🔄 Check Latest Forecast</button>
+                <button id="update-btn" class="update-btn"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg> Check Latest Forecast</button>
                 <p class="button-help">Forecasts are generated automatically by GitHub Actions.</p>
             </section>
 
@@ -87,11 +87,11 @@
             </div>
             <div id="retro-sidebar" hidden>
                 <section class="control-section">
-                    <h2>📍 Select Region (AOI)</h2>
+                    <h2><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg> Select Region (AOI)</h2>
                     <select id="retro-region" class="aoi-select" aria-label="Select forecast region"><option value="umap">Upper Mississippi Alluvial Plain (UMAP)</option><option value="wlc">Western Louisiana Coast (WLC)</option></select>
                 </section>
                 <section class="control-section">
-                    <h2><label for="retro-date">📅 Retrospective forecast data</label></h2>
+                    <h2><label for="retro-date"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg> Retrospective forecast data</label></h2>
                     <div class="retro-date-navigation">
                         <button id="retro-prev" class="timeline-arrow" aria-label="Previous retrospective date" title="Previous available date" disabled>&#9664;</button>
                         <input id="retro-date" type="date">
@@ -141,7 +141,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="colormap.js"></script>
-    <script src="app.js?v=retro-metrics-2"></script>
-    <script src="retrospective.js?v=retro-metrics-2"></script>
+    <script src="app.js?v=marine-design-1"></script>
+    <script src="retrospective.js?v=marine-design-1"></script>
 </body>
 </html>
