@@ -29,19 +29,37 @@
       "date": "2026-09-05",
       "lead_day": 1,
       "raster": "validation/umap/2026-09-05/forecast-2026-09-05.png",
-      "observation": "validation/umap/2026-09-05/observation-2026-09-05.png"
+      "observation": "validation/umap/2026-09-05/observation-2026-09-05.png",
+      "metrics": {
+        "mae": 1.8776858660568805,
+        "rmse": 9.8136119719173,
+        "valid_pixels": 140586,
+        "unit": "percentage_points"
+      }
     },
     {
       "date": "2026-09-06",
       "lead_day": 2,
       "raster": "validation/umap/2026-09-05/forecast-2026-09-06.png",
-      "observation": "validation/umap/2026-09-05/observation-2026-09-06.png"
+      "observation": "validation/umap/2026-09-05/observation-2026-09-06.png",
+      "metrics": {
+        "mae": 2.0444202299212315,
+        "rmse": 10.680158364987836,
+        "valid_pixels": 141378,
+        "unit": "percentage_points"
+      }
     },
     {
       "date": "2026-09-07",
       "lead_day": 3,
       "raster": "validation/umap/2026-09-05/forecast-2026-09-07.png",
-      "observation": "validation/umap/2026-09-05/observation-2026-09-07.png"
+      "observation": "validation/umap/2026-09-05/observation-2026-09-07.png",
+      "metrics": {
+        "mae": 1.696629629285839,
+        "rmse": 9.355898943871603,
+        "valid_pixels": 141480,
+        "unit": "percentage_points"
+      }
     }
   ],
   "input_assets": [],
