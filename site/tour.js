@@ -19,13 +19,41 @@
         if (!dialog.open) return;
         const target = document.querySelector(steps[index].target);
         const highlight = el('tour-highlight');
-        if (!target || !target.getClientRects().length) {highlight.hidden = true; return;}
+        if (!target || !target.getClientRects().length) {
+            highlight.hidden = true;
+            dialog.removeAttribute('data-side');
+            dialog.style.left = `${Math.max(12,(window.innerWidth-dialog.offsetWidth)/2)}px`;
+            dialog.style.top = `${Math.max(12,(window.innerHeight-dialog.offsetHeight)/2)}px`;
+            return;
+        }
         const rect = target.getBoundingClientRect();
         const container = target.closest('#sidebar');
         const bounds = container ? container.getBoundingClientRect() : {top:0,bottom:window.innerHeight};
         const top = Math.max(rect.top, bounds.top), bottom = Math.min(rect.bottom, bounds.bottom);
         highlight.hidden = bottom <= top;
         Object.assign(highlight.style, {left:`${Math.max(2,rect.left-5)}px`,top:`${Math.max(2,top-5)}px`,width:`${Math.min(rect.width+10,window.innerWidth-4)}px`,height:`${bottom-top+10}px`});
+        const pad = 12, gap = 18, width = dialog.offsetWidth, height = dialog.offsetHeight;
+        const viewportWidth = window.innerWidth, viewportHeight = window.innerHeight;
+        const clamp = (value, min, max) => Math.max(min, Math.min(value, Math.max(min,max)));
+        const centerX = rect.left + rect.width/2, centerY = (top+bottom)/2;
+        const candidates = [
+            {side:'right', x:rect.right+gap, y:clamp(top,pad,viewportHeight-height-pad)},
+            {side:'bottom', x:clamp(centerX-width/2,pad,viewportWidth-width-pad), y:bottom+gap},
+            {side:'left', x:rect.left-gap-width, y:clamp(top,pad,viewportHeight-height-pad)},
+            {side:'top', x:clamp(centerX-width/2,pad,viewportWidth-width-pad), y:top-gap-height},
+        ];
+        let placement = candidates.find(p => p.x>=pad && p.y>=pad && p.x+width<=viewportWidth-pad && p.y+height<=viewportHeight-pad);
+        if (!placement) {
+            // On short screens use the side with most room and keep navigation reachable.
+            placement = bottom < viewportHeight-top ? candidates[1] : candidates[3];
+            placement = {...placement, x:clamp(placement.x,pad,viewportWidth-width-pad), y:clamp(placement.y,pad,viewportHeight-height-pad)};
+        }
+        dialog.dataset.side = placement.side;
+        dialog.style.left = `${placement.x}px`;
+        dialog.style.top = `${placement.y}px`;
+        const arrow = placement.side==='right' || placement.side==='left'
+            ? clamp(centerY-placement.y,20,height-20) : clamp(centerX-placement.x,20,width-20);
+        dialog.style.setProperty('--tour-arrow',`${arrow}px`);
     }
     function render() {
         const step = steps[index];

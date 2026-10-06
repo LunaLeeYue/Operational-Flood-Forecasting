@@ -352,3 +352,13 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
     #tour-title { font-size: 19px; }
     #tour-description { min-height: 0; }
 }
+
+/* Position each tour card beside its highlighted control. */
+#quick-tour { inset: auto; margin: 0; max-width: calc(100vw - 24px); }
+.tour-card { max-height: calc(100dvh - 24px); overflow-y: auto; }
+#quick-tour::after { content: ''; position: absolute; width: 12px; height: 12px; background: white; transform: rotate(45deg); pointer-events: none; }
+#quick-tour:not([data-side])::after { display: none; }
+#quick-tour[data-side="right"]::after { left: -6px; top: calc(var(--tour-arrow) - 6px); border-left: 1px solid #d7e2e8; border-bottom: 1px solid #d7e2e8; }
+#quick-tour[data-side="left"]::after { right: -6px; top: calc(var(--tour-arrow) - 6px); border-right: 1px solid #d7e2e8; border-top: 1px solid #d7e2e8; }
+#quick-tour[data-side="bottom"]::after { top: -6px; left: calc(var(--tour-arrow) - 6px); border-left: 1px solid #d7e2e8; border-top: 1px solid #d7e2e8; }
+#quick-tour[data-side="top"]::after { bottom: -6px; left: calc(var(--tour-arrow) - 6px); border-right: 1px solid #d7e2e8; border-bottom: 1px solid #d7e2e8; }
