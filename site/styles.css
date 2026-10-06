@@ -324,3 +324,31 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px s
     .loading { left: 50%; }
     .legend-scale { height: 100px; }
 }
+
+.tour-launch { flex-shrink: 0; border: 1px solid #cfdae0; background: white; color: #28566d; border-radius: 4px; padding: 8px 12px; font-size: 12px; cursor: pointer; }
+.tour-launch:hover { background: #f1f6f8; }
+#quick-tour { position: fixed; margin: auto 24px auto auto; width: 390px; max-width: calc(100vw - 32px); padding: 0; overflow: visible; border: 0; border-radius: 8px; color: #213340; background: transparent; }
+#quick-tour::backdrop { background: #142a3a66; }
+.tour-card { position: relative; padding: 24px; border: 1px solid #d7e2e8; border-radius: 8px; background: white; box-shadow: 0 12px 48px #102b3b40; }
+.tour-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+#tour-count { font-size: 10px; font-weight: 650; letter-spacing: 1.2px; color: #637e8c; }
+#tour-skip { border: 0; padding: 5px 0; background: transparent; color: #617784; cursor: pointer; font-size: 11px; }
+#tour-title { margin: 18px 0 10px; font-size: 21px; font-weight: 650; color: #173e52; }
+#tour-description { font-size: 13px; line-height: 1.75; color: #526977; min-height: 92px; margin: 0 0 24px; }
+.tour-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 16px; border-top: 1px solid #e4ebef; }
+.tour-footer label { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #617784; white-space: nowrap; }
+#tour-dismiss { margin: 0; accent-color: #185570; }
+.tour-actions { display: flex; gap: 6px; }
+.tour-actions button { border: 1px solid #ccdbe3; border-radius: 4px; padding: 8px 12px; font-size: 12px; background: #fff; color: #28566d; cursor: pointer; }
+#tour-next { background: #185570; border-color: #185570; color: white; }
+#tour-back:disabled { opacity: .35; cursor: default; }
+#tour-highlight { position: fixed; border: 2px solid #62cee5; border-radius: 5px; box-shadow: 0 0 0 4px #ffffff88; pointer-events: none; }
+@media (max-width:760px) {
+    #header { flex-wrap: wrap; }
+    .header-title { flex-basis: calc(100% - 100px); }
+    .tour-launch { order: 3; padding: 5px 10px; font-size: 11px; }
+    #quick-tour { margin: auto 16px 16px; width: calc(100% - 32px); }
+    .tour-card { padding: 18px; }
+    #tour-title { font-size: 19px; }
+    #tour-description { min-height: 0; }
+}

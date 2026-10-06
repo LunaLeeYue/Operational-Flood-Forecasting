@@ -7,7 +7,7 @@
     <title>Near-real-time Flood Forecasting | ConvLSTM</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="icon" type="image/png" href="assets/flood-icon.png">
-    <link rel="stylesheet" href="styles.css?v=marine-design-1">
+    <link rel="stylesheet" href="styles.css?v=quick-tour-1">
 </head>
 <body>
     <header id="header">
@@ -16,6 +16,7 @@
             <p>ConvLSTM 3-day forecasts using NOAA JPSS VIIRS daily flood maps</p>
             <p class="developer-credit">Developer: <strong>Yue Li</strong> (University of Houston)</p>
         </div>
+        <button id="tour-launch" class="tour-launch" type="button">Quick tour</button>
         <img class="uh-logo" src="assets/uh-logo.png" alt="University of Houston" width="132" height="90">
     </header>
 
@@ -139,9 +140,22 @@
         </div>
     </main>
 
+    <dialog id="quick-tour" aria-labelledby="tour-title" aria-describedby="tour-description">
+        <div id="tour-highlight" aria-hidden="true" hidden></div>
+        <div class="tour-card">
+            <div class="tour-top"><span id="tour-count"></span><button id="tour-skip" type="button">Skip tour</button></div>
+            <h2 id="tour-title"></h2>
+            <p id="tour-description"></p>
+            <div class="tour-footer">
+                <label><input id="tour-dismiss" type="checkbox"> Don't show again</label>
+                <div class="tour-actions"><button id="tour-back" type="button">Back</button><button id="tour-next" type="button" autofocus>Next</button></div>
+            </div>
+        </div>
+    </dialog>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="colormap.js"></script>
-    <script src="app.js?v=marine-design-1"></script>
-    <script src="retrospective.js?v=marine-design-1"></script>
+    <script src="app.js?v=quick-tour-1"></script>
+    <script src="retrospective.js?v=quick-tour-1"></script>
+    <script src="tour.js?v=quick-tour-1"></script>
 </body>
 </html>
