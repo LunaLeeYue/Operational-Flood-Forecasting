@@ -18,6 +18,12 @@
       "metadata": "validation/wlc/runs/20261006T001717166763_0000/metadata.json",
       "provenance": "operational_archive",
       "generated_at": "2026-10-06T00:17:17.166763+00:00"
+    },
+    {
+      "date": "2026-10-05",
+      "metadata": "validation/wlc/runs/20261006T001920921948_0000/metadata.json",
+      "provenance": "operational_archive",
+      "generated_at": "2026-10-06T00:19:20.921948+00:00"
     }
   ]
 }
