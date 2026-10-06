@@ -1,0 +1,56 @@
+{
+  "region_id": "wlc",
+  "region_name": "Western Louisiana Coast (WLC)",
+  "issue_date": "2026-09-21",
+  "provenance": "retrospective_reconstruction",
+  "generated_at": "2026-10-06T00:43:24.601550+00:00",
+  "latest_observation_date": "2026-09-20",
+  "input_dates": [
+    "2026-09-12",
+    "2026-09-13",
+    "2026-09-14",
+    "2026-09-15",
+    "2026-09-16",
+    "2026-09-17",
+    "2026-09-18",
+    "2026-09-19",
+    "2026-09-20"
+  ],
+  "bounds": [
+    [
+      29.52757693291354,
+      -93.74932122407454
+    ],
+    [
+      30.876377025936222,
+      -91.93855709919158
+    ]
+  ],
+  "assets": [
+    {
+      "date": "2026-09-21",
+      "lead_day": 1,
+      "raster": "validation/wlc/2026-09-21/forecast-2026-09-21.png",
+      "observation": "validation/wlc/2026-09-21/observation-2026-09-21.png"
+    },
+    {
+      "date": "2026-09-22",
+      "lead_day": 2,
+      "raster": "validation/wlc/2026-09-21/forecast-2026-09-22.png",
+      "observation": "validation/wlc/2026-09-21/observation-2026-09-22.png"
+    },
+    {
+      "date": "2026-09-23",
+      "lead_day": 3,
+      "raster": "validation/wlc/2026-09-21/forecast-2026-09-23.png",
+      "observation": "validation/wlc/2026-09-21/observation-2026-09-23.png"
+    }
+  ],
+  "input_assets": [],
+  "model": {
+    "history_days": 9,
+    "forecast_days": 3
+  },
+  "model_sha256": "51789829cfe1b4873f1b06d52585648b2336c019760c61f72492d98474a45aea",
+  "note": "Reconstructed using archived NOAA inputs strictly before the forecast start date, not an original issued forecast. Upstream archives may have been revised."
+}
