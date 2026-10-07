@@ -167,8 +167,22 @@
         el('nrt-mode').setAttribute('aria-pressed',String(!historical));el('retro-mode').setAttribute('aria-pressed',String(historical));
         if(historical)initRetro();else window.dispatchEvent(new Event('nrt-visible'));
     }
-    el('nrt-mode').addEventListener('click',()=>switchMode(false));
-    el('retro-mode').addEventListener('click',()=>switchMode(true));
+    // Real paths let Web Analytics distinguish mode entries. Generated HTML
+    // aliases keep bookmarks and reloads working on static GitHub Pages.
+    const historicalPath = () => location.pathname.endsWith('/retrospective.html');
+    function navigateMode(historical, event) {
+        if (event.isTrusted && historical !== historicalPath()) {
+            const url = new URL(historical ? 'retrospective.html' : 'nrt.html', location.href);
+            url.search = location.search;
+            history.pushState(null, '', url);
+        }
+        // The quick tour's synthetic clicks never create analytics page views.
+        switchMode(historical);
+    }
+    el('nrt-mode').addEventListener('click',event=>navigateMode(false,event));
+    el('retro-mode').addEventListener('click',event=>navigateMode(true,event));
+    window.addEventListener('popstate',()=>switchMode(historicalPath()));
+    if (historicalPath()) switchMode(true);
     el('retro-region').addEventListener('change',selectRegion);
     el('retro-prev').addEventListener('click',()=>stepDate(-1));
     el('retro-next').addEventListener('click',()=>stepDate(1));

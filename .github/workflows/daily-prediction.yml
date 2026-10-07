@@ -94,6 +94,9 @@ jobs:
             git push origin HEAD:forecast-history
           fi
 
+      - name: Prepare analytics mode entry points
+        run: python scripts/prepare_site.py
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 

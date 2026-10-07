@@ -18,3 +18,5 @@ site/data/wlc/
 # Local diagnostic outputs
 validation_site/
 *.log
+site/nrt.html
+site/retrospective.html
