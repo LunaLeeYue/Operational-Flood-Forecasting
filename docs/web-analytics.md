@@ -1,9 +1,6 @@
 # Private usage reports
 
-Cloudflare Web Analytics is disabled until the owner supplies the public site
-token from their Web Analytics JavaScript snippet. Do not use an account API key.
-Set the `token` constant in `site/analytics.js` and deploy. The beacon only loads
-on `lunaleeyue.github.io`; local previews do not send traffic.
+Cloudflare Web Analytics uses the owner-provided public site token in `site/analytics.js`. This is not an account API key. The beacon only loads on `lunaleeyue.github.io`; local previews do not send traffic.
 
 In the Cloudflare dashboard, add `lunaleeyue.github.io` as a Web Analytics site
 using manual installation (no DNS migration required). Keep the analytics
