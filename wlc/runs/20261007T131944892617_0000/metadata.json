@@ -1,0 +1,66 @@
+{
+  "status": "success",
+  "region_id": "wlc",
+  "region_name": "Western Louisiana Coast (WLC)",
+  "generated_at": "2026-10-07T13:19:44.892617+00:00",
+  "latest_observation_date": "2026-10-06",
+  "input_dates": [
+    "2026-09-28",
+    "2026-09-29",
+    "2026-09-30",
+    "2026-10-01",
+    "2026-10-02",
+    "2026-10-03",
+    "2026-10-04",
+    "2026-10-05",
+    "2026-10-06"
+  ],
+  "input_assets": [],
+  "prediction_dates": [
+    "2026-10-07",
+    "2026-10-08",
+    "2026-10-09"
+  ],
+  "bounds": [
+    [
+      29.52757693291354,
+      -93.74932122407454
+    ],
+    [
+      30.876377025936222,
+      -91.93855709919158
+    ]
+  ],
+  "center": [
+    30.2,
+    -92.85
+  ],
+  "zoom": 8,
+  "model": {
+    "history_days": 9,
+    "forecast_days": 3
+  },
+  "assets": [
+    {
+      "date": "2026-10-07",
+      "lead_day": 1,
+      "raster": "validation/wlc/runs/20261007T131944892617_0000/forecast-2026-10-07.png"
+    },
+    {
+      "date": "2026-10-08",
+      "lead_day": 2,
+      "raster": "validation/wlc/runs/20261007T131944892617_0000/forecast-2026-10-08.png"
+    },
+    {
+      "date": "2026-10-09",
+      "lead_day": 3,
+      "raster": "validation/wlc/runs/20261007T131944892617_0000/forecast-2026-10-09.png"
+    }
+  ],
+  "data_source": "NOAA JPSS VFM 1-day global composite",
+  "disclaimer": "Near-real-time research forecast; not for emergency decisions.",
+  "provenance": "operational_archive",
+  "issue_date": "2026-10-07",
+  "model_sha256": "51789829cfe1b4873f1b06d52585648b2336c019760c61f72492d98474a45aea",
+  "workflow_run_id": "37627438179"
+}
