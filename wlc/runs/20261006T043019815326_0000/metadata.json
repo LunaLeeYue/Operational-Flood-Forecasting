@@ -56,7 +56,14 @@
     {
       "date": "2026-10-07",
       "lead_day": 2,
-      "raster": "validation/wlc/runs/20261006T043019815326_0000/forecast-2026-10-07.png"
+      "raster": "validation/wlc/runs/20261006T043019815326_0000/forecast-2026-10-07.png",
+      "observation": "validation/wlc/observations/2026-10-07.png",
+      "metrics": {
+        "mae": 4.575001335139606,
+        "rmse": 15.024816967361817,
+        "valid_pixels": 109580,
+        "unit": "percentage_points"
+      }
     },
     {
       "date": "2026-10-08",
