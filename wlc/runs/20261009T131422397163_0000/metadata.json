@@ -2,10 +2,9 @@
   "status": "success",
   "region_id": "wlc",
   "region_name": "Western Louisiana Coast (WLC)",
-  "generated_at": "2026-10-08T13:26:32.130511+00:00",
-  "latest_observation_date": "2026-10-07",
+  "generated_at": "2026-10-09T13:14:22.397163+00:00",
+  "latest_observation_date": "2026-10-08",
   "input_dates": [
-    "2026-09-29",
     "2026-09-30",
     "2026-10-01",
     "2026-10-02",
@@ -13,13 +12,14 @@
     "2026-10-04",
     "2026-10-05",
     "2026-10-06",
-    "2026-10-07"
+    "2026-10-07",
+    "2026-10-08"
   ],
   "input_assets": [],
   "prediction_dates": [
-    "2026-10-08",
     "2026-10-09",
-    "2026-10-10"
+    "2026-10-10",
+    "2026-10-11"
   ],
   "bounds": [
     [
@@ -42,32 +42,25 @@
   },
   "assets": [
     {
-      "date": "2026-10-08",
-      "lead_day": 1,
-      "raster": "validation/wlc/runs/20261008T132632130511_0000/forecast-2026-10-08.png",
-      "observation": "validation/wlc/observations/2026-10-08.png",
-      "metrics": {
-        "mae": 4.67498629999759,
-        "rmse": 14.961431832448577,
-        "valid_pixels": 111435,
-        "unit": "percentage_points"
-      }
-    },
-    {
       "date": "2026-10-09",
-      "lead_day": 2,
-      "raster": "validation/wlc/runs/20261008T132632130511_0000/forecast-2026-10-09.png"
+      "lead_day": 1,
+      "raster": "validation/wlc/runs/20261009T131422397163_0000/forecast-2026-10-09.png"
     },
     {
       "date": "2026-10-10",
+      "lead_day": 2,
+      "raster": "validation/wlc/runs/20261009T131422397163_0000/forecast-2026-10-10.png"
+    },
+    {
+      "date": "2026-10-11",
       "lead_day": 3,
-      "raster": "validation/wlc/runs/20261008T132632130511_0000/forecast-2026-10-10.png"
+      "raster": "validation/wlc/runs/20261009T131422397163_0000/forecast-2026-10-11.png"
     }
   ],
   "data_source": "NOAA JPSS VFM 1-day global composite",
   "disclaimer": "Near-real-time research forecast; not for emergency decisions.",
   "provenance": "operational_archive",
-  "issue_date": "2026-10-08",
+  "issue_date": "2026-10-09",
   "model_sha256": "51789829cfe1b4873f1b06d52585648b2336c019760c61f72492d98474a45aea",
-  "workflow_run_id": "37784109610"
+  "workflow_run_id": "37935226254"
 }
