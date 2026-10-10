@@ -2,22 +2,22 @@
   "status": "success",
   "region_id": "umap",
   "region_name": "Upper Mississippi Alluvial Plain (UMAP)",
-  "generated_at": "2026-10-09T13:14:01.181927+00:00",
-  "latest_observation_date": "2026-10-08",
+  "generated_at": "2026-10-10T12:29:02.113856+00:00",
+  "latest_observation_date": "2026-10-09",
   "input_dates": [
-    "2026-10-02",
     "2026-10-03",
     "2026-10-04",
     "2026-10-05",
     "2026-10-06",
     "2026-10-07",
-    "2026-10-08"
+    "2026-10-08",
+    "2026-10-09"
   ],
   "input_assets": [],
   "prediction_dates": [
-    "2026-10-09",
     "2026-10-10",
-    "2026-10-11"
+    "2026-10-11",
+    "2026-10-12"
   ],
   "bounds": [
     [
@@ -40,32 +40,25 @@
   },
   "assets": [
     {
-      "date": "2026-10-09",
-      "lead_day": 1,
-      "raster": "validation/umap/runs/20261009T131401181927_0000/forecast-2026-10-09.png",
-      "observation": "validation/umap/observations/2026-10-09.png",
-      "metrics": {
-        "mae": 1.4148028329827271,
-        "rmse": 8.122895006708127,
-        "valid_pixels": 141526,
-        "unit": "percentage_points"
-      }
-    },
-    {
       "date": "2026-10-10",
-      "lead_day": 2,
-      "raster": "validation/umap/runs/20261009T131401181927_0000/forecast-2026-10-10.png"
+      "lead_day": 1,
+      "raster": "validation/umap/runs/20261010T122902113856_0000/forecast-2026-10-10.png"
     },
     {
       "date": "2026-10-11",
+      "lead_day": 2,
+      "raster": "validation/umap/runs/20261010T122902113856_0000/forecast-2026-10-11.png"
+    },
+    {
+      "date": "2026-10-12",
       "lead_day": 3,
-      "raster": "validation/umap/runs/20261009T131401181927_0000/forecast-2026-10-11.png"
+      "raster": "validation/umap/runs/20261010T122902113856_0000/forecast-2026-10-12.png"
     }
   ],
   "data_source": "NOAA JPSS VFM 1-day global composite",
   "disclaimer": "Near-real-time research forecast; not for emergency decisions.",
   "provenance": "operational_archive",
-  "issue_date": "2026-10-09",
+  "issue_date": "2026-10-10",
   "model_sha256": "24cafaee146cb2c129991aed861b96f0046e8d4744228e7516143146fae45cfe",
-  "workflow_run_id": "37935226254"
+  "workflow_run_id": "38052024327"
 }
