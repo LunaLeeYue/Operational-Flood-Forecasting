@@ -1,0 +1,64 @@
+{
+  "status": "success",
+  "region_id": "umap",
+  "region_name": "Upper Mississippi Alluvial Plain (UMAP)",
+  "generated_at": "2026-10-12T15:19:08.706903+00:00",
+  "latest_observation_date": "2026-10-11",
+  "input_dates": [
+    "2026-10-05",
+    "2026-10-06",
+    "2026-10-07",
+    "2026-10-08",
+    "2026-10-09",
+    "2026-10-10",
+    "2026-10-11"
+  ],
+  "input_assets": [],
+  "prediction_dates": [
+    "2026-10-12",
+    "2026-10-13",
+    "2026-10-14"
+  ],
+  "bounds": [
+    [
+      35.20265332430648,
+      -90.45487699686663
+    ],
+    [
+      37.5225894843055,
+      -88.65422887268134
+    ]
+  ],
+  "center": [
+    36.36,
+    -89.55
+  ],
+  "zoom": 8,
+  "model": {
+    "history_days": 7,
+    "forecast_days": 3
+  },
+  "assets": [
+    {
+      "date": "2026-10-12",
+      "lead_day": 1,
+      "raster": "validation/umap/runs/20261012T151908706903_0000/forecast-2026-10-12.png"
+    },
+    {
+      "date": "2026-10-13",
+      "lead_day": 2,
+      "raster": "validation/umap/runs/20261012T151908706903_0000/forecast-2026-10-13.png"
+    },
+    {
+      "date": "2026-10-14",
+      "lead_day": 3,
+      "raster": "validation/umap/runs/20261012T151908706903_0000/forecast-2026-10-14.png"
+    }
+  ],
+  "data_source": "NOAA JPSS VFM 1-day global composite",
+  "disclaimer": "Near-real-time research forecast; not for emergency decisions.",
+  "provenance": "operational_archive",
+  "issue_date": "2026-10-12",
+  "model_sha256": "24cafaee146cb2c129991aed861b96f0046e8d4744228e7516143146fae45cfe",
+  "workflow_run_id": "38269165722"
+}

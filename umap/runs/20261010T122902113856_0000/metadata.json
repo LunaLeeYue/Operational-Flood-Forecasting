@@ -54,7 +54,14 @@
     {
       "date": "2026-10-11",
       "lead_day": 2,
-      "raster": "validation/umap/runs/20261010T122902113856_0000/forecast-2026-10-11.png"
+      "raster": "validation/umap/runs/20261010T122902113856_0000/forecast-2026-10-11.png",
+      "observation": "validation/umap/observations/2026-10-11.png",
+      "metrics": {
+        "mae": 1.4299631260367438,
+        "rmse": 8.35429860316781,
+        "valid_pixels": 141530,
+        "unit": "percentage_points"
+      }
     },
     {
       "date": "2026-10-12",
