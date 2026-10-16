@@ -66,7 +66,14 @@
     {
       "date": "2026-10-15",
       "lead_day": 3,
-      "raster": "validation/umap/runs/20261013T140849674687_0000/forecast-2026-10-15.png"
+      "raster": "validation/umap/runs/20261013T140849674687_0000/forecast-2026-10-15.png",
+      "observation": "validation/umap/observations/2026-10-15.png",
+      "metrics": {
+        "mae": 1.7647628838566898,
+        "rmse": 9.90277306685623,
+        "valid_pixels": 140442,
+        "unit": "percentage_points"
+      }
     }
   ],
   "data_source": "NOAA JPSS VFM 1-day global composite",
