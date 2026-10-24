@@ -913,6 +913,20 @@
       "metadata": "validation/wlc/runs/20261023T113606854741_0000/metadata.json",
       "provenance": "operational_archive",
       "generated_at": "2026-10-23T11:36:06.854741+00:00"
+    },
+    {
+      "region_id": "umap",
+      "date": "2026-10-24",
+      "metadata": "validation/umap/runs/20261024T105610148466_0000/metadata.json",
+      "provenance": "operational_archive",
+      "generated_at": "2026-10-24T10:56:10.148466+00:00"
+    },
+    {
+      "region_id": "wlc",
+      "date": "2026-10-24",
+      "metadata": "validation/wlc/runs/20261024T105636812507_0000/metadata.json",
+      "provenance": "operational_archive",
+      "generated_at": "2026-10-24T10:56:36.812507+00:00"
     }
   ],
   "targets": [
@@ -2477,6 +2491,36 @@
       }
     },
     {
+      "region_id": "umap",
+      "date": "2026-10-23",
+      "leads": {
+        "3": {
+          "region_id": "umap",
+          "date": "2026-10-23",
+          "metadata": "validation/umap/runs/20261021T114543980420_0000/metadata.json",
+          "provenance": "operational_archive",
+          "generated_at": "2026-10-21T11:45:43.980420+00:00",
+          "lead_day": 3
+        },
+        "2": {
+          "region_id": "umap",
+          "date": "2026-10-23",
+          "metadata": "validation/umap/runs/20261022T114832803108_0000/metadata.json",
+          "provenance": "operational_archive",
+          "generated_at": "2026-10-22T11:48:32.803108+00:00",
+          "lead_day": 2
+        },
+        "1": {
+          "region_id": "umap",
+          "date": "2026-10-23",
+          "metadata": "validation/umap/runs/20261023T113536262646_0000/metadata.json",
+          "provenance": "operational_archive",
+          "generated_at": "2026-10-23T11:35:36.262646+00:00",
+          "lead_day": 1
+        }
+      }
+    },
+    {
       "region_id": "wlc",
       "date": "2026-09-01",
       "leads": {
@@ -4032,6 +4076,36 @@
           "metadata": "validation/wlc/runs/20261022T114856989759_0000/metadata.json",
           "provenance": "operational_archive",
           "generated_at": "2026-10-22T11:48:56.989759+00:00",
+          "lead_day": 1
+        }
+      }
+    },
+    {
+      "region_id": "wlc",
+      "date": "2026-10-23",
+      "leads": {
+        "3": {
+          "region_id": "wlc",
+          "date": "2026-10-23",
+          "metadata": "validation/wlc/runs/20261021T114604165702_0000/metadata.json",
+          "provenance": "operational_archive",
+          "generated_at": "2026-10-21T11:46:04.165702+00:00",
+          "lead_day": 3
+        },
+        "2": {
+          "region_id": "wlc",
+          "date": "2026-10-23",
+          "metadata": "validation/wlc/runs/20261022T114856989759_0000/metadata.json",
+          "provenance": "operational_archive",
+          "generated_at": "2026-10-22T11:48:56.989759+00:00",
+          "lead_day": 2
+        },
+        "1": {
+          "region_id": "wlc",
+          "date": "2026-10-23",
+          "metadata": "validation/wlc/runs/20261023T113606854741_0000/metadata.json",
+          "provenance": "operational_archive",
+          "generated_at": "2026-10-23T11:36:06.854741+00:00",
           "lead_day": 1
         }
       }
